@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 
 class UserController extends Controller
 {
-    function index(Request $request)
+    public function login(Request $request)
     {
         $user= User::where('email', $request->email)->first();
         // print_r($data);
@@ -25,5 +25,12 @@ class UserController extends Controller
             ];
         
              return response($response, 201);
+    }
+    public function logout(Request $request){
+        $request->user()->currentAccessToken()->delete();
+        return response([
+            'message'=> ['User log out successfully'],200
+        ]);
+        
     }
 }
