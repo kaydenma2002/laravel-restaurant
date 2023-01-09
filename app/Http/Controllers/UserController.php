@@ -33,4 +33,9 @@ class UserController extends Controller
         ]);
         
     }
+    public function profile(Request $request){
+        return response([
+            'data' => $request->user()
+        ]);
+    }
 }

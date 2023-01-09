@@ -18,7 +18,8 @@ use App\Models\User;
 Route::post('login', [UserController::class, 'login']);
 Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::post('logout', [UserController::class, 'logout']);
-    Route::get('user',function(){
+    Route::get('users',function(){
         return response([User::all()]);
     });
+    Route::get('user',[UserController::class, 'profile']);
 });
