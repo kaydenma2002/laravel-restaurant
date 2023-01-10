@@ -2,40 +2,24 @@
 
 namespace App\Http\Controllers;
 use App\Models\User;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Http\Request;
+use App\Interfaces\UserInterface;
 
 class UserController extends Controller
 {
+    private $userInterface;
+    public function __construct(UserInterface $userInterface)
+    {
+        $this->userInterface = $userInterface;
+    }
     public function login(Request $request)
     {
-        $user= User::where('email', $request->email)->first();
-        // print_r($data);
-            if (!$user || !Hash::check($request->password, $user->password)) {
-                return response([
-                    'message' => ['These credentials do not match our records.']
-                ], 404);
-            }
-        
-             $token = $user->createToken('my-app-token')->plainTextToken;
-        
-            $response = [
-                'user' => $user,
-                'token' => $token
-            ];
-        
-             return response($response, 201);
+        return $this->userInterface->authenticateUser($request);
     }
     public function logout(Request $request){
-        $request->user()->currentAccessToken()->delete();
-        return response([
-            'message'=> ['User log out successfully'],200
-        ]);
-        
+        return $this->userInterface->logout($request);
     }
     public function profile(Request $request){
-        return response([
-            'data' => $request->user()
-        ]);
+        return $this->userInterface->getUserById($request);
     }
 }
