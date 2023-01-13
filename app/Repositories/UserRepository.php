@@ -53,8 +53,8 @@ class UserRepository implements UserInterface
     public function createUser($request)
     {
         return User::create([
-            'title' => $request->title,
-            'content' => $request->content,
+            'email' => $request->email,
+            'password' => Hash::make($request->password),
         ]);
     }
 

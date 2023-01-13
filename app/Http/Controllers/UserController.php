@@ -12,6 +12,9 @@ class UserController extends Controller
     {
         $this->userInterface = $userInterface;
     }
+    public function register(Request $request){
+        return $this->userInterface->createUser($request);
+    }
     public function login(Request $request)
     {
         return $this->userInterface->authenticateUser($request);

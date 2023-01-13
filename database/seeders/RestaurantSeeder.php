@@ -6,7 +6,7 @@ use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
-class UsersTableSeeder extends Seeder
+class RestaurantSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -15,10 +15,13 @@ class UsersTableSeeder extends Seeder
      */
     public function run()
     {
-        DB::table('users')->insert([
-            'name' => 'kayden',
-            'email' => 'john@doe.com',
-            'password' => Hash::make('password')
-        ]);
+        
+            DB::table('restaurants')->insert([
+                'name' => 'kayden restaurant',
+                'address' => '7509 Davian Drive Annandale',
+                'user_id' => 1,
+            ]);
+        
+        
     }
 }
