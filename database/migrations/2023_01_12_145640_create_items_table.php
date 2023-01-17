@@ -16,7 +16,9 @@ return new class extends Migration
         Schema::create('items', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->unsignedBigInteger('menu_id')->unsigned();
+            $table->text('description');
+            $table->integer('price')->default(0);
+            $table->unsignedBigInteger('menu_id')->unsigned()->nullable();
             $table->foreign('menu_id')->references('id')->on('menus');
             $table->timestamps();
         });
