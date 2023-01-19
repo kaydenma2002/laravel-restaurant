@@ -1,8 +1,10 @@
 <?php
 
+use App\Http\Controllers\MenuController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
+
 use App\Models\User;
 /*
 |--------------------------------------------------------------------------
@@ -24,4 +26,5 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
         return response([User::all()]);
     });
     Route::get('user',[UserController::class, 'profile']);
+    Route::get('menu',[MenuController::class,'getAllItem']);
 });

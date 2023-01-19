@@ -20,6 +20,7 @@ class ItemFactory extends Factory
         $productSuffixes = ['Pho','Hu tieu','Banh canh','Banh bot loc','Bun bo Hue','Chao','Soup cua','Mi Y'];
         return [
             'name' => Arr::random($productSuffixes),
+            'food_type' => Arr::random([0,1,2]),
             'description' => fake()->realText(320),
             'price' => fake()->numberBetween(5,50),
         ];

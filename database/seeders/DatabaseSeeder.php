@@ -1,6 +1,7 @@
 <?php
 
 namespace Database\Seeders;
+
 use App\Models\User;
 use App\Models\Item;
 use App\Models\Menu;
@@ -22,6 +23,5 @@ class DatabaseSeeder extends Seeder
         Menu::factory()->count(3)->has(Item::factory()->count(3))
         ->create();
         Item::factory()->count(10)->create();
-        
     }
 }

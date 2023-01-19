@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('name');
             $table->text('description');
             $table->integer('price')->default(0);
+            $table->string('food_type');
             $table->unsignedBigInteger('menu_id')->unsigned()->nullable();
             $table->foreign('menu_id')->references('id')->on('menus');
             $table->timestamps();

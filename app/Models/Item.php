@@ -8,11 +8,14 @@ use Illuminate\Database\Eloquent\Model;
 class Item extends Model
 {
     use HasFactory;
-    public function menu(){
+    public function menus(){
         return $this->belongsTo(Menu::class);
     }
     public function orders(){
-        return $this->belongsTo(Order::class);
+        return $this->belongsToMany(Order::class);
+    }
+    public function category(){
+        return $this->belongsTo(Category::class);
     }
     
 }
