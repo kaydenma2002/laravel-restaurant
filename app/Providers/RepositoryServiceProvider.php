@@ -5,8 +5,11 @@ namespace App\Providers;
 use App\Interfaces\MenuInterface;
 use Illuminate\Support\ServiceProvider;
 use App\Interfaces\UserInterface;
-use App\Repositories\MenuRepository;
+use App\Interfaces\StripeInterface;
+use App\Interfaces\ReservationInterface;
 use App\Repositories\UserRepository;
+use App\Repositories\StripeRepository;
+use App\Repositories\ReservationRepository;
 class RepositoryServiceProvider extends ServiceProvider
 {
     /**
@@ -28,5 +31,7 @@ class RepositoryServiceProvider extends ServiceProvider
     {
         $this->app->bind(UserInterface::class, UserRepository::class);
         $this->app->bind(MenuInterface::class, MenuRepository::class);
+        $this->app->bind(StripeInterface::class, StripeRepository::class);
+        $this->app->bind(ReservationInterface::class, ReservationRepository::class);
     }
 }

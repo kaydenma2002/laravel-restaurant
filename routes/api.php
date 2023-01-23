@@ -4,6 +4,8 @@ use App\Http\Controllers\MenuController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\StripePaymentController;
+use App\Http\Controllers\ReservationController;
 
 use App\Models\User;
 /*
@@ -28,3 +30,5 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::get('user',[UserController::class, 'profile']);
     Route::get('menu',[MenuController::class,'getAllItem']);
 });
+Route::post('createReservation',[ReservationController::class,'create']);
+Route::post('stripe',[StripePaymentController::class,'stripePost']);
