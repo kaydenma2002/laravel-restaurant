@@ -10,6 +10,8 @@ use App\Interfaces\ReservationInterface;
 use App\Repositories\UserRepository;
 use App\Repositories\StripeRepository;
 use App\Repositories\ReservationRepository;
+use App\Repositories\MenuRepository;
+
 class RepositoryServiceProvider extends ServiceProvider
 {
     /**
