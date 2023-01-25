@@ -19,7 +19,7 @@ class MenuFactory extends Factory
     public function definition()
     {
         return [
-            'restaurant_id' => Restaurant::factory()->create()
+            'restaurant_id' => Restaurant::factory()
         ];
     }
 }
