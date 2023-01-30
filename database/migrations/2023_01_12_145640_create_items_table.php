@@ -15,11 +15,13 @@ return new class extends Migration
     {
         Schema::create('items', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->text('description');
+            $table->string('business_id')->nullable();
+            $table->string('name')->default('kayden');
+            $table->text('description')->nullable();
             $table->integer('price')->default(0);
-            $table->string('food_type');
-            $table->string('image');
+            $table->string('food_type')->nullable();;
+            $table->string('image')->nullable();;
+            $table->string('title')->nullable();;
             $table->unsignedBigInteger('menu_id')->unsigned()->nullable();
             $table->foreign('menu_id')->references('id')->on('menus');
             $table->timestamps();

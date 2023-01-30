@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+
 use App\Models\User;
 use Illuminate\Http\Request;
 use App\Interfaces\UserInterface;
@@ -12,17 +13,24 @@ class UserController extends Controller
     {
         $this->userInterface = $userInterface;
     }
-    public function register(Request $request){
+    public function register(Request $request)
+    {
         return $this->userInterface->createUser($request);
     }
     public function login(Request $request)
     {
         return $this->userInterface->authenticateUser($request);
     }
-    public function logout(Request $request){
+    public function logout(Request $request)
+    {
         return $this->userInterface->logout($request);
     }
-    public function profile(Request $request){
+    public function profile(Request $request)
+    {
         return $this->userInterface->getUserById($request);
+    }
+    public function getAllUsers()
+    {
+        return $this->userInterface->getAllUsers();
     }
 }

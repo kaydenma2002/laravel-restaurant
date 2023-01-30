@@ -41,7 +41,7 @@ class UserRepository implements UserInterface
     }
     public function getAllUsers()
     {
-        return User::all();
+        return User::with('restaurant')->get();
     }
 
     /**

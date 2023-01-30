@@ -15,9 +15,15 @@ return new class extends Migration
     {
         Schema::create('restaurants', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->string('address');
-            $table->unsignedBigInteger('user_id');
+            $table->string('business_id')->nullable();
+            $table->string('city')->nullable();
+            $table->string('phone')->nullable();
+            $table->string('state')->nullable();
+            $table->string('status')->nullable();
+            $table->string('zip_code')->nullable();
+            $table->string('name')->nullable();
+            $table->string('address')->nullable();
+            $table->unsignedBigInteger('user_id')->default(1);
             $table->foreign('user_id')->references('id')->on('users');
             $table->timestamps();
         });

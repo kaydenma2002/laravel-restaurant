@@ -1,11 +1,13 @@
 <?php
 
 use App\Http\Controllers\MenuController;
+use App\Http\Controllers\OrderController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\StripePaymentController;
 use App\Http\Controllers\ReservationController;
+
 
 use App\Models\User;
 /*
@@ -20,15 +22,17 @@ use App\Models\User;
 */
 
 Route::post('login', [UserController::class, 'login']);
-Route::post('register',[UserController::class,'register']);
+Route::post('register', [UserController::class, 'register']);
 
 Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::post('logout', [UserController::class, 'logout']);
-    Route::get('users',function(){
-        return response([User::all()]);
-    });
-    Route::get('user',[UserController::class, 'profile']);
-    Route::get('menu',[MenuController::class,'getAllItem']);
+
+    Route::get('user', [UserController::class, 'profile']);
+    Route::get('menu', [MenuController::class, 'getAllItem']);
 });
-Route::post('createReservation',[ReservationController::class,'create']);
-Route::post('stripe',[StripePaymentController::class,'stripePost']);
+Route::post('createReservation', [ReservationController::class, 'create']);
+Route::post('stripe', [StripePaymentController::class, 'stripePost']);
+Route::get('users', [UserController::class, 'getAllUsers']);
+Route::group(['prefix' => 'create'], function () {
+    Route::post('order', [OrderController::class, 'create']);
+});
