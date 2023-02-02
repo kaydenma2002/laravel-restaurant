@@ -17,7 +17,7 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-
+        
         User::factory()
             ->count(100)
             ->has(Restaurant::factory()->has(Menu::factory()->has(Item::factory()->count(50))))

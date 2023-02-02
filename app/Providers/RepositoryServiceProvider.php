@@ -13,7 +13,8 @@ use App\Interfaces\StripeInterface;
 use App\Repositories\StripeRepository;
 use App\Interfaces\OrderInterface;
 use App\Repositories\OrderRepository;
-
+use App\Interfaces\CartInterface;
+use App\Repositories\CartRepository;
 
 
 
@@ -42,5 +43,6 @@ class RepositoryServiceProvider extends ServiceProvider
         $this->app->bind(StripeInterface::class, StripeRepository::class);
         $this->app->bind(ReservationInterface::class, ReservationRepository::class);
         $this->app->bind(OrderInterface::class, OrderRepository::class);
+        $this->app->bind(CartInterface::class, CartRepository::class);
     }
 }
