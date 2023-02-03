@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\StripePaymentController;
 use App\Http\Controllers\ReservationController;
-
+use App\Http\Controllers\RestaurantController;
 
 use App\Models\User;
 /*
@@ -29,6 +29,7 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::post('logout', [UserController::class, 'logout']);
 
     Route::get('user', [UserController::class, 'profile']);
+    Route::get('restaurant',[RestaurantController::class,'index']);
     Route::get('menu', [MenuController::class, 'getAllItem']);
     Route::get('cartByUserId',[CartController::class,'find']);
     Route::group(['prefix' => 'create'], function () {

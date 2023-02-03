@@ -23,7 +23,7 @@ return new class extends Migration
             $table->string('zip_code')->nullable();
             $table->string('name')->nullable();
             $table->string('address')->nullable();
-            $table->unsignedBigInteger('user_id')->default(1);
+            $table->unsignedBigInteger('user_id')->nullable();
             $table->foreign('user_id')->references('id')->on('users');
             $table->timestamps();
         });
