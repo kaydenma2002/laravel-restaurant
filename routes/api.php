@@ -35,6 +35,10 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
         Route::post('order', [OrderController::class, 'create']);
         Route::post('cart',[CartController::class,'create']);
     });
+    Route::group(['prefix' => 'remove'], function () {
+        Route::post('order', [OrderController::class, 'remove']);
+        Route::post('cart',[CartController::class,'remove']);
+    });
     Route::post('stripe', [StripePaymentController::class, 'stripePost']);
 
 });

@@ -15,6 +15,10 @@ class CartRepository implements CartInterface
             'item_id' => $request->item_id
         ]);
     }
+    public function remove()
+    {
+        return Cart::where('user_id', Auth::id())->delete();
+    }
     public function find(){
         return Cart::with('user','item')->where('user_id',Auth::id())->get();
     }
