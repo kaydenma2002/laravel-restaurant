@@ -41,6 +41,7 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
         Route::post('cart',[CartController::class,'remove']);
     });
     Route::post('stripe', [StripePaymentController::class, 'stripePost']);
+    Route::get('restaurant/search', [RestaurantController::class, 'search']);
 
 });
 Route::post('createReservation', [ReservationController::class, 'create']);

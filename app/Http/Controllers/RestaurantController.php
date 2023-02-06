@@ -15,4 +15,7 @@ class RestaurantController extends Controller
     public function index(){
         return $this->restaurantInterface->index();
     }
+    public function search(Request $request){
+        return $this->restaurantInterface->search($request);
+    }
 }

@@ -6,4 +6,5 @@ interface RestaurantInterface
 
 {
     public function index();
+    public function search($request);
 }

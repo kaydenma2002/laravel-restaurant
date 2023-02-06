@@ -11,7 +11,9 @@ class RestaurantRepository implements RestaurantInterface
 {
     public function index()
     {
-        return Restaurant::all();
-
+        return Restaurant::paginate(10);
+    }
+    public function search($request){
+        return Restaurant::where('name','LIKE', '%' . $request->search . '%')->orWhere('zip_code',$request->search)->orWhere('city',$request->search)->orWhere('state',$request->search)->orWhere('status',$request->search)->paginate(10);
     }
 }

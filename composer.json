@@ -6,11 +6,13 @@
     "license": "MIT",
     "require": {
         "php": "^8.0.2",
+        "algolia/algoliasearch-client-php": "^3.3",
         "fakerphp/faker": "*",
         "guzzlehttp/guzzle": "^7.2",
         "jzonta/faker-restaurant": "^2.0",
         "laravel/framework": "^9.19",
         "laravel/sanctum": "^3.1",
+        "laravel/scout": "^9.8",
         "laravel/tinker": "^2.7",
         "stripe/stripe-php": "^10.4",
         "xvladqt/faker-lorem-flickr": "^1.0"
