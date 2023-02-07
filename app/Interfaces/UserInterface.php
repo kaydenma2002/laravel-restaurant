@@ -12,4 +12,5 @@ interface UserInterface
     public function getUserById($request);
     public function updateUser($request, $userId);
     public function deleteUser($userId);
+    public function confirmUser($request);
 }

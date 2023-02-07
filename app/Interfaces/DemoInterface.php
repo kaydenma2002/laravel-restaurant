@@ -2,7 +2,8 @@
 
 namespace App\Interfaces;
 
-interface ReservationInterface
+interface DemoInterface
+
 {
     public function create($request);
 }

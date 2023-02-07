@@ -3,13 +3,13 @@
 namespace App\Repositories;
 use Illuminate\Support\Facades\Hash;
 
-use App\Interfaces\ReservationInterface;
-use App\Models\Reservation;
+use App\Interfaces\DemoInterface;
+use App\Models\Demo;
 
-class ReservationRepository implements ReservationInterface
+class DemoRepository implements DemoInterface
 {
     public function create($request){
-        return Reservation::create([
+        return Demo::create([
             'name' => $request->name,
             'company' => $request->company,
             'zip_code' => $request->zip_code,

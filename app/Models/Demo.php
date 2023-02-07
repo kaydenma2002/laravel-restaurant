@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Reservation extends Model
+class Demo extends Model
 {
     use HasFactory;
     protected $fillable = [
@@ -15,4 +15,7 @@ class Reservation extends Model
         'zip_code',
         'phone'
     ];
+    public function user(){
+        return $this->belongsTo(User::class);
+    }
 }

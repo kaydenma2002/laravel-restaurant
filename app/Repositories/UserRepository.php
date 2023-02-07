@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Repositories;
+
 use Illuminate\Support\Facades\Hash;
 
 use App\Interfaces\UserInterface;
@@ -16,27 +17,38 @@ class UserRepository implements UserInterface
      */
     public function authenticateUser($request)
     {
-        $user= User::where('email', $request->email)->first();
-        
-            if (!$user || !Hash::check($request->password, $user->password)) {
-                return response([
-                    'message' => ['These credentials do not match our records.']
-                ], 404);
-            }
-        
-             $token = $user->createToken('my-app-token')->plainTextToken;
-        
-            $response = [
-                'user' => $user,
-                'token' => $token
-            ];
-        
-             return response($response, 201);
+        $user = User::where('email', $request->email)->first();
+
+        if (!$user || !Hash::check($request->password, $user->password)) {
+            return response([
+                'message' => ['These credentials do not match our records.']
+            ], 404);
+        }elseif($user->status === '0'){
+            return response([
+                'message' => ['Please verify your email address to activate your account.']
+
+            ], 404);
+        }elseif($user->status === '2'){
+            return response([
+                'message' => ['This account has been blocked. Please contact our support staff.']
+
+
+            ], 404);
+
+        $token = $user->createToken('my-app-token')->plainTextToken;
+
+        $response = [
+            'user' => $user,
+            'token' => $token
+        ];
+
+        return response($response, 201);
     }
-    public function logout($request){
+    public function logout($request)
+    {
         $request->user()->currentAccessToken()->delete();
         return response([
-            'message'=> ['User log out successfully'],200
+            'message' => ['User log out successfully'], 200
         ]);
     }
     public function getAllUsers()
@@ -55,6 +67,8 @@ class UserRepository implements UserInterface
         return User::create([
             'email' => $request->email,
             'password' => Hash::make($request->password),
+            'name' => $request->name,
+            'status' => $request->status
         ]);
     }
 
@@ -96,6 +110,18 @@ class UserRepository implements UserInterface
         $user = User::find($id);
         if ($user) {
             return $user->delete();
+        }
+    }
+    public function confirmUser($request)
+    {
+        $user = User::where('email', $request->email)->first();
+
+        if ($user->status === '0') {
+            $user->status = '1';
+            $user->save();
+            return redirect('http://127.0.0.1:5173/login');
+        }else{
+            return redirect('http://127.0.0.1:5173/login');
         }
     }
 }
