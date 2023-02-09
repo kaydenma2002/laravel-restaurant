@@ -34,7 +34,7 @@ class UserRepository implements UserInterface
 
 
             ], 404);
-
+        }
         $token = $user->createToken('my-app-token')->plainTextToken;
 
         $response = [
@@ -48,7 +48,7 @@ class UserRepository implements UserInterface
     {
         $request->user()->currentAccessToken()->delete();
         return response([
-            'message' => ['User log out successfully'], 200
+            'message' => 'User log out successfully'
         ]);
     }
     public function getAllUsers()
