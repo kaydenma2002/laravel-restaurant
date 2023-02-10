@@ -6,7 +6,7 @@ use Illuminate\Support\Facades\Hash;
 
 use App\Interfaces\UserInterface;
 use App\Models\User;
-
+use Illuminate\Support\Facades\Auth;
 class UserRepository implements UserInterface
 {
 
@@ -55,7 +55,8 @@ class UserRepository implements UserInterface
     {
         return User::with('restaurant')->get();
     }
-
+    
+    
     /**
      * Function : Create User
      *
@@ -70,6 +71,24 @@ class UserRepository implements UserInterface
             'name' => $request->name,
             'status' => $request->status
         ]);
+    }
+    public function updateUser($request){
+        $user = Auth::user();
+        if(Hash::check($request->old_password, $user->password)){
+            if($request->new_password != $request->confirm_password){
+                return response([
+                   'message' => ['New password and confirm password must be the same']
+
+                ],201);
+            }else{
+                return User::where('id', $user->id)->update(['password' => Hash::make($request->new_password)]);
+            }
+        }else{
+            return response([
+               'message' => 'Passwords do not match.'
+            ],201);
+        }
+       
     }
 
     /**
@@ -89,16 +108,7 @@ class UserRepository implements UserInterface
      * @param [type] $id
      * @return post
      */
-    public function updateUser($request, $id)
-    {
-        $user = User::find($id);
-        if ($user) {
-            $user['title'] = $request->title;
-            $user['content'] = $request->content;
-            $user->save();
-            return $user;
-        }
-    }
+    
 
     /**
      * Function : Delete User
@@ -119,9 +129,9 @@ class UserRepository implements UserInterface
         if ($user->status === '0') {
             $user->status = '1';
             $user->save();
-            return redirect('http://127.0.0.1:5173/login');
+            return redirect('http://localhost:5173/login');
         }else{
-            return redirect('http://127.0.0.1:5173/login');
+            return redirect('http://localhost:5173/login');
         }
     }
 }

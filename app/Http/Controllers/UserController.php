@@ -33,7 +33,12 @@ class UserController extends Controller
     {
         return $this->userInterface->getAllUsers();
     }
-    public function confirm(Request $request){
+    public function update(Request $request) 
+    {
+        return $this->userInterface->updateUser($request);
+    }
+    public function confirm(Request $request)
+    {
         return $this->userInterface->confirmUser($request);
     }
 }

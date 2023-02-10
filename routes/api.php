@@ -48,6 +48,10 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
         Route::post('order', [OrderController::class, 'remove']);
         Route::post('cart', [CartController::class, 'remove']);
     });
+    Route::group(['prefix' => 'update'], function () {
+        Route::post('user', [UserController::class, 'update']);
+        Route::post('cart', [CartController::class, 'remove']);
+    });
 
     Route::post('stripe', [StripePaymentController::class, 'stripePost']);
     Route::get('restaurant/search', [RestaurantController::class, 'search']);
