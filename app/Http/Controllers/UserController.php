@@ -41,4 +41,10 @@ class UserController extends Controller
     {
         return $this->userInterface->confirmUser($request);
     }
+    public function getEmail(Request $request){
+        return $this->userInterface->getUserByEmail($request);
+    }
+    public function resetPassword(Request $request){
+        return $this->userInterface->resetPassword($request);
+    }
 }

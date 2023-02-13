@@ -62,3 +62,7 @@ Route::group(['prefix' => 'confirm'], function () {
     });
 });
 Route::get('users', [UserController::class, 'getAllUsers']);
+Route::group(['prefix' => 'forgot-password'], function () {
+    Route::post('email',[UserController::class, 'getEmail']);
+    Route::post('reset-password',[UserController::class, 'resetPassword']);
+});

@@ -6,7 +6,9 @@ use Illuminate\Support\Facades\Hash;
 
 use App\Interfaces\UserInterface;
 use App\Models\User;
+use App\Models\PasswordReset;
 use Illuminate\Support\Facades\Auth;
+
 class UserRepository implements UserInterface
 {
 
@@ -23,12 +25,12 @@ class UserRepository implements UserInterface
             return response([
                 'message' => ['These credentials do not match our records.']
             ], 404);
-        }elseif($user->status === '0'){
+        } elseif ($user->status === '0') {
             return response([
                 'message' => ['Please verify your email address to activate your account.']
 
             ], 404);
-        }elseif($user->status === '2'){
+        } elseif ($user->status === '2') {
             return response([
                 'message' => ['This account has been blocked. Please contact our support staff.']
 
@@ -55,8 +57,8 @@ class UserRepository implements UserInterface
     {
         return User::with('restaurant')->get();
     }
-    
-    
+
+
     /**
      * Function : Create User
      *
@@ -72,23 +74,23 @@ class UserRepository implements UserInterface
             'status' => $request->status
         ]);
     }
-    public function updateUser($request){
+    public function updateUser($request)
+    {
         $user = Auth::user();
-        if(Hash::check($request->old_password, $user->password)){
-            if($request->new_password != $request->confirm_password){
+        if (Hash::check($request->old_password, $user->password)) {
+            if ($request->new_password != $request->confirm_password) {
                 return response([
-                   'message' => ['New password and confirm password must be the same']
+                    'message' => ['New password and confirm password must be the same']
 
-                ],201);
-            }else{
+                ], 201);
+            } else {
                 return User::where('id', $user->id)->update(['password' => Hash::make($request->new_password)]);
             }
-        }else{
+        } else {
             return response([
-               'message' => 'Passwords do not match.'
-            ],201);
+                'message' => 'Passwords do not match.'
+            ], 201);
         }
-       
     }
 
     /**
@@ -108,7 +110,7 @@ class UserRepository implements UserInterface
      * @param [type] $id
      * @return post
      */
-    
+
 
     /**
      * Function : Delete User
@@ -130,8 +132,40 @@ class UserRepository implements UserInterface
             $user->status = '1';
             $user->save();
             return redirect('http://localhost:5173/login');
-        }else{
+        } else {
             return redirect('http://localhost:5173/login');
+        }
+    }
+    public function getUserByEmail($request)
+    {
+        $user = User::where('email', $request->email)->first();
+        if ($user) {
+            PasswordReset::create([
+                'email' => $user->email,
+                'token' => $request->verify_code,
+            ]);
+        }
+        return $user;
+    }
+    public function resetPassword($request)
+    {
+        $reset = PasswordReset::where('email', $request->email)
+            ->where('created_at', '>=', now()->subHours(24))
+            ->latest()->first();
+        if ($reset->token === $request->verify_code) {
+
+            $user = User::where('email', $request->email)->first();
+            $user->password = Hash::make($request->new_password);
+            $user->save();
+            $reset->delete();
+            return response([
+                'message' => 'Your password has been reset',
+
+             ], 200);;
+        }else{
+            return response([
+               'message' => 'Invalid reset code'
+            ], 400);
         }
     }
 }

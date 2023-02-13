@@ -55,4 +55,7 @@ class User extends Authenticatable
     public function demo(){
         return $this->hasOne(Demo::class);
     }
+    public function password_reset(){
+        return $this->hasOne(PasswordReset::class);
+    }
 }

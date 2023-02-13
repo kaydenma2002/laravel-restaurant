@@ -13,4 +13,6 @@ interface UserInterface
     public function updateUser($request);
     public function deleteUser($userId);
     public function confirmUser($request);
+    public function getUserByEmail($request);
+    public function resetPassword($request);
 }
