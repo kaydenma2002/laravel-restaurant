@@ -18,7 +18,8 @@ use App\Interfaces\CartInterface;
 use App\Repositories\CartRepository;
 use App\Interfaces\RestaurantInterface;
 use App\Repositories\RestaurantRepository;
-
+use App\Repositories\AdminRepository;
+use App\Interfaces\AdminInterface;
 
 
 class RepositoryServiceProvider extends ServiceProvider
@@ -43,9 +44,10 @@ class RepositoryServiceProvider extends ServiceProvider
         $this->app->bind(UserInterface::class, UserRepository::class);
         $this->app->bind(MenuInterface::class, MenuRepository::class);
         $this->app->bind(StripeInterface::class, StripeRepository::class);
-        $this->app->bind(DemoInterface::class, App\Providers\DemoRepository::class);
+        $this->app->bind(DemoInterface::class, DemoRepository::class);
         $this->app->bind(OrderInterface::class, OrderRepository::class);
         $this->app->bind(CartInterface::class, CartRepository::class);
         $this->app->bind(RestaurantInterface::class, RestaurantRepository::class);
+        $this->app->bind(AdminInterface::class, AdminRepository::class);
     }
 }

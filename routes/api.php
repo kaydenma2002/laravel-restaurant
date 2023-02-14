@@ -9,6 +9,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\StripePaymentController;
 use App\Http\Controllers\DemoController;
 use App\Http\Controllers\RestaurantController;
+use App\Http\Controllers\AdminController;
 
 use App\Models\User;
 /*
@@ -26,9 +27,9 @@ Route::post('login', [UserController::class, 'login']);
 Route::post('register', [UserController::class, 'register']);
 
 Route::group(['middleware' => 'auth:sanctum'], function () {
-    
 
-    
+
+
     Route::group(
         ['prefix' => '/'],
         function () {
@@ -63,6 +64,13 @@ Route::group(['prefix' => 'confirm'], function () {
 });
 Route::get('users', [UserController::class, 'getAllUsers']);
 Route::group(['prefix' => 'forgot-password'], function () {
-    Route::post('email',[UserController::class, 'getEmail']);
-    Route::post('reset-password',[UserController::class, 'resetPassword']);
+    Route::post('email', [UserController::class, 'getEmail']);
+    Route::post('reset-password', [UserController::class, 'resetPassword']);
+});
+
+Route::group(['prefix' => 'admin'], function () {
+    Route::post('login', [AdminController::class, 'login']);
+    Route::group(['middleware' => 'auth:sanctum'], function () {
+        Route::post('logout', [AdminController::class, 'logout']);
+    });
 });
