@@ -20,4 +20,8 @@ class AdminController extends Controller
     {
         return $this->adminInterface->logout($request);
     }
+    public function dashboard()
+    {
+        return $this->adminInterface->dashboard();
+    }
 }

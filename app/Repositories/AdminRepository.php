@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Interfaces\AdminInterface;
 use App\Models\Cart;
 use App\Models\User;
+use App\Models\Restaurant;
 
 class AdminRepository implements AdminInterface
 {
@@ -45,6 +46,17 @@ class AdminRepository implements AdminInterface
         $request->user()->currentAccessToken()->delete();
         return response([
             'message' => 'User log out successfully'
+        ]);
+    }
+    public function dashboard()
+    {
+        $admin = User::where('user_type', '1')->get();
+        $restaurants = Restaurant::where('status', 'Pending')->get();
+        $customer = User::where('user_type', 0)->get();
+        return response([
+            'admin' => $admin,
+            'restaurants' => $restaurants,
+            'customers' => $customer,
         ]);
     }
 }

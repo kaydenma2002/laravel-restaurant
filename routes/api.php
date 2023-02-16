@@ -72,5 +72,6 @@ Route::group(['prefix' => 'admin'], function () {
     Route::post('login', [AdminController::class, 'login']);
     Route::group(['middleware' => 'auth:sanctum'], function () {
         Route::post('logout', [AdminController::class, 'logout']);
+        Route::get('dashboard', [AdminController::class, 'dashboard']);
     });
 });
