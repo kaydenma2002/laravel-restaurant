@@ -10,7 +10,7 @@ use App\Http\Controllers\StripePaymentController;
 use App\Http\Controllers\DemoController;
 use App\Http\Controllers\RestaurantController;
 use App\Http\Controllers\AdminController;
-
+use App\Http\Controllers\ChatController;
 use App\Models\User;
 /*
 |--------------------------------------------------------------------------
@@ -25,7 +25,7 @@ use App\Models\User;
 
 Route::post('login', [UserController::class, 'login']);
 Route::post('register', [UserController::class, 'register']);
-
+Route::post('messages', [ChatController::class, 'messages']);
 Route::group(['middleware' => 'auth:sanctum'], function () {
 
 
