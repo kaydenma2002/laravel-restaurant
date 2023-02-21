@@ -2,6 +2,7 @@
 
 namespace App\Events;
 
+use App\Models\User;
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Broadcasting\PresenceChannel;
@@ -19,25 +20,15 @@ class Message implements ShouldBroadcast
      *
      * @return void
      */
-    public $message;
-    public $username;
-    public function __construct($message, $username)
+    public $user;
+
+    public function __construct($user)
     {
-        $this->message = $message;
-        $this->username = $username;
+        $this->user = $user;
     }
 
-    /**
-     * Get the channels the event should broadcast on.
-     *
-     * @return \Illuminate\Broadcasting\Channel|array
-     */
     public function broadcastOn()
     {
-        return ['chat'];
-    }
-    public function broadcastAs()
-    {
-        return 'message';
+        return new PrivateChannel('user.' . $this->user['id']);
     }
 }

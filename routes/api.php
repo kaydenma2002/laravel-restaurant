@@ -25,7 +25,6 @@ use App\Models\User;
 
 Route::post('login', [UserController::class, 'login']);
 Route::post('register', [UserController::class, 'register']);
-Route::post('messages', [ChatController::class, 'messages']);
 Route::group(['middleware' => 'auth:sanctum'], function () {
 
 
@@ -37,6 +36,7 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
             Route::get('user', [UserController::class, 'profile']);
             Route::post('logout', [UserController::class, 'logout']);
             Route::get('menu', [MenuController::class, 'getAllItem']);
+            Route::post('messages', [ChatController::class, 'messages']);
         }
     );
     Route::get('cartByUserId', [CartController::class, 'find']);
