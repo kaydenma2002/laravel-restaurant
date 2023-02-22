@@ -33,10 +33,14 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
         ['prefix' => '/'],
         function () {
             Route::get('restaurant', [RestaurantController::class, 'index']);
-            Route::get('user', [UserController::class, 'profile']);
+
+            Route::group(['prefix' => 'user'], function () {
+                Route::get('/', [UserController::class, 'profile']);
+                Route::get('/chat', [ChatController::class, 'getAllChat']);
+            });
             Route::post('logout', [UserController::class, 'logout']);
             Route::get('menu', [MenuController::class, 'getAllItem']);
-            Route::post('messages', [ChatController::class, 'messages']);
+            Route::post('messages', [ChatController::class, 'sendMessage']);
         }
     );
     Route::get('cartByUserId', [CartController::class, 'find']);

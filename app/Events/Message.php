@@ -10,9 +10,11 @@ use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
-
+use App\Models\Chat;
 class Message implements ShouldBroadcast
 {
+    
+
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
     /**
@@ -20,15 +22,16 @@ class Message implements ShouldBroadcast
      *
      * @return void
      */
-    public $user;
-
-    public function __construct($user)
+    public $userId;
+    public $chat;
+    public function __construct($userId, Chat $chat)
     {
-        $this->user = $user;
+        $this->userId = $userId;
+        $this->chat = $chat;
     }
 
     public function broadcastOn()
     {
-        return new PrivateChannel('user.' . $this->user['id']);
+        return new PrivateChannel('user.' . $this->userId);
     }
 }

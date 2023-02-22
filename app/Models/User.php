@@ -59,4 +59,10 @@ class User extends Authenticatable
     public function password_reset(){
         return $this->hasOne(PasswordReset::class);
     }
+    public function chats()
+    {
+        return $this->hasMany(Chat::class);
+    }
+    
+    
 }
