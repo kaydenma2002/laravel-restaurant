@@ -15,8 +15,8 @@ return new class extends Migration
     {
         Schema::create('chats', function (Blueprint $table) {
             $table->id();
-            $table->string('message');
-            $table->string('reply');
+            $table->text('message', 65535);
+            $table->text('reply', 65535);
             $table->unsignedBigInteger('user_id')->nullable();
             $table->foreign('user_id')->references('id')->on('users');
             $table->timestamp('created_at')->useCurrent();

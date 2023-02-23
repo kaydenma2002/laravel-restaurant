@@ -17,6 +17,8 @@ class ChatController extends Controller
             [
                 'model' => 'text-davinci-003',
                 'prompt' => $request->message,
+                'max_tokens' => 128,
+                'temperature'=>0,
             ],
 
         );
@@ -28,7 +30,9 @@ class ChatController extends Controller
 
         $chat->save();
         event(new Message(Auth::user()->id, $chat));
-        return response()->json($result);
+        
+
+        return response()->json(OpenAI::models()->list());
     }
     public function getAllChat()
     {
