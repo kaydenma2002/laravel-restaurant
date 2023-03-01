@@ -15,4 +15,7 @@ class MenuController extends Controller
     public function getAllItem(Request $request){
         return $this->menuInterface->getAllItem($request);
     }
+    public function getAllItemByRestaurant(Request $request){
+        return $this->menuInterface->getAllItemByRestaurant($request);
+    }
 }

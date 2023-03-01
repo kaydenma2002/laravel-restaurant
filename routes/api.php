@@ -11,6 +11,9 @@ use App\Http\Controllers\DemoController;
 use App\Http\Controllers\RestaurantController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\ChatController;
+use App\Http\Controllers\PhoneVerificationController;
+use App\Http\Controllers\ReservationController;
+use App\Models\Reservation;
 use App\Models\User;
 /*
 |--------------------------------------------------------------------------
@@ -25,6 +28,9 @@ use App\Models\User;
 
 Route::post('login', [UserController::class, 'login']);
 Route::post('register', [UserController::class, 'register']);
+Route::post('verify-mobile',[PhoneVerificationController::class,'index']);
+Route::post('submit-reservation',[ReservationController::class,'index']);
+Route::get('submit-restaurant',[MenuController::class, 'getAllItemByRestaurant']);
 Route::group(['middleware' => 'auth:sanctum'], function () {
 
 
@@ -67,11 +73,12 @@ Route::group(['prefix' => 'confirm'], function () {
     });
 });
 Route::get('users', [UserController::class, 'getAllUsers']);
+//forgot password
 Route::group(['prefix' => 'forgot-password'], function () {
     Route::post('email', [UserController::class, 'getEmail']);
     Route::post('reset-password', [UserController::class, 'resetPassword']);
 });
-
+// admin
 Route::group(['prefix' => 'admin'], function () {
     Route::post('login', [AdminController::class, 'login']);
     Route::group(['middleware' => 'auth:sanctum'], function () {
