@@ -12,7 +12,7 @@ class Item extends Model
         return $this->belongsTo(Menu::class);
     }
     public function orders(){
-        return $this->belongsToMany(Order::class);
+        return $this->hasMany(Order::class);
     }
     public function category(){
         return $this->belongsTo(Category::class);

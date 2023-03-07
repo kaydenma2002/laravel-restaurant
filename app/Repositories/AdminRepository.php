@@ -59,4 +59,24 @@ class AdminRepository implements AdminInterface
             'customers' => $customer,
         ]);
     }
+    public function viewUserById($request)
+    {
+        return Restaurant::with('user')->where('user_id', $request->id)->get();
+    }
+    public function updateUserById($request)
+    {
+        $user = User::find($request->id);
+        $user->email = $request->email;
+        $user->name = $request->name;
+        $user->save();
+        $restaurant = Restaurant::where('user_id', $user->id)->first();
+        $restaurant->name = $request->restaurant_name;
+        $restaurant->address = $request->address;
+        $restaurant->save();
+        return response(['success' => true,'message' =>'User updated successfully']);
+    }
+    public function deleteUserById($request){
+        $user = User::find($request->id);
+        return $user->delete();
+    }
 }

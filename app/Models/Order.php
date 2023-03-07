@@ -16,12 +16,14 @@ class Order extends Model
         'city',
         'zip_code',
         'email',
-        'total'
+        'total',
+        'company',
+        'item_id'
     ];
     public function user(){
         return $this->belongsTo(User::class);
     }
     public function items(){
-        return $this->hasMany(Item::class);
+        return $this->belongsTo(Item::class);
     }
 }

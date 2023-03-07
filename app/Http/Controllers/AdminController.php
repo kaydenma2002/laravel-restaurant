@@ -24,4 +24,15 @@ class AdminController extends Controller
     {
         return $this->adminInterface->dashboard();
     }
+    public function viewUserById(Request $request){
+        return $this->adminInterface->viewUserById($request);
+    }
+    public function updateUserById(Request $request){
+        return $this->adminInterface->updateUserById($request);
+    }
+    public function deleteUserById(Request $request)
+    {
+        return $this->adminInterface->deleteUserById($request);
+    }
+    
 }

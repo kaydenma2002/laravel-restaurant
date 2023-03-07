@@ -22,9 +22,10 @@ return new class extends Migration
             $table->string('city');
             $table->string('zip_code');
             $table->string('email');
+            $table->string('company');
             $table->integer('total');
-            $table->unsignedBigInteger('item_id')->unsigned()->nullable();
-            $table->foreign('item_id')->references('id')->on('items');
+            $table->json('item_id');
+            $table->foreign('item_id')->references('id')->on('items')->onDelete('cascade');
             $table->timestamps();
         });
     }

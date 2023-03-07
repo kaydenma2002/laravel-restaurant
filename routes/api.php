@@ -28,9 +28,9 @@ use App\Models\User;
 
 Route::post('login', [UserController::class, 'login']);
 Route::post('register', [UserController::class, 'register']);
-Route::post('verify-mobile',[PhoneVerificationController::class,'index']);
-Route::post('submit-reservation',[ReservationController::class,'index']);
-Route::get('submit-restaurant',[MenuController::class, 'getAllItemByRestaurant']);
+Route::post('verify-mobile', [PhoneVerificationController::class, 'index']);
+Route::post('submit-reservation', [ReservationController::class, 'index']);
+Route::get('submit-restaurant', [MenuController::class, 'getAllItemByRestaurant']);
 Route::group(['middleware' => 'auth:sanctum'], function () {
 
 
@@ -47,6 +47,7 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
             Route::post('logout', [UserController::class, 'logout']);
             Route::get('menu', [MenuController::class, 'getAllItem']);
             Route::post('messages', [ChatController::class, 'sendMessage']);
+            Route::post('removeCartById', [CartController::class, 'removeById']);
         }
     );
     Route::get('cartByUserId', [CartController::class, 'find']);
@@ -73,6 +74,7 @@ Route::group(['prefix' => 'confirm'], function () {
     });
 });
 Route::get('users', [UserController::class, 'getAllUsers']);
+Route::get('orders',[OrderController::class, 'getAllOrders']);
 //forgot password
 Route::group(['prefix' => 'forgot-password'], function () {
     Route::post('email', [UserController::class, 'getEmail']);
@@ -84,5 +86,8 @@ Route::group(['prefix' => 'admin'], function () {
     Route::group(['middleware' => 'auth:sanctum'], function () {
         Route::post('logout', [AdminController::class, 'logout']);
         Route::get('dashboard', [AdminController::class, 'dashboard']);
+        Route::post('viewUserById', [AdminController::class, 'viewUserById']);
+        Route::post('updateUserById', [AdminController::class, 'updateUserById']);
+        Route::post('deleteUserById', [AdminController::class, 'deleteUserById']);
     });
 });

@@ -13,8 +13,12 @@ class CartController extends Controller
     public function create(Request $request){
         return $this->CartInterface->create($request);
     }
-    public function remove(){
-        return $this->CartInterface->remove();
+    public function remove(Request $request){
+        return $this->CartInterface->remove($request);
+    }
+    public function removeById(Request $request)
+    {
+        return $this->CartInterface->removeById($request);
     }
 
     public function find(){

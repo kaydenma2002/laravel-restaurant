@@ -18,13 +18,14 @@ class OrderRepository implements OrderInterface
             'street' => $request->street,
             'city' => $request->city,
             'zip_code' => $request->zip_code,
-            'card_number' => $request->card_number,
-            'card_holder' => $request->card_holder,
-            'exp_month' => $request->exp_month,
-            'exp_year' => $request->exp_year,
-            'cvv' => $request->cvv,
+            'company' => $request->company,
             'total' => $request->total,
-            'email' => $request->email
+            'email' => $request->email,
+            'item_id' => json_encode($request->item_id)
         ]);
+    }
+    public function getAllOrders()
+    {
+        return Order::whereIn('item_id', [20201, 20201, 20201, 20201] )->get();
     }
 }
