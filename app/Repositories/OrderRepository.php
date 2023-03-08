@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Hash;
 
 use App\Interfaces\OrderInterface;
 use App\Models\Order;
+use App\Models\Item;
 
 class OrderRepository implements OrderInterface
 {
@@ -21,11 +22,30 @@ class OrderRepository implements OrderInterface
             'company' => $request->company,
             'total' => $request->total,
             'email' => $request->email,
-            'item_id' => json_encode($request->item_id)
+            'item_id' => serialize($request->item_id)
         ]);
     }
     public function getAllOrders()
     {
-        return Order::whereIn('item_id', [20201, 20201, 20201, 20201] )->get();
+
+        $orders = Order::all();
+
+        $items = Item::all();
+        $items = $items->toArray();
+
+        foreach ($orders as $order) {
+            foreach ((unserialize($order->item_id)) as $index_id => $item_id) {
+                foreach ($items as $item) {
+                    if (in_array($item_id, $item)) {
+                        $order[$index_id] = $item;
+                    }
+                }
+            }
+            $order->item_id = unserialize($order->item_id);
+        }
+
+
+
+        return $orders;
     }
 }

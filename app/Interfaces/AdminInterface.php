@@ -10,4 +10,8 @@ interface AdminInterface
     public function viewUserById($request);
     public function updateUserById($request);
     public function deleteUserById($request);
+    public function viewOrderById($request);
+    public function deleteOrderById($request);
+    public function viewReservationById($request);
+    public function deleteReservationById($request);
 }

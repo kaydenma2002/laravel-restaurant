@@ -75,6 +75,7 @@ Route::group(['prefix' => 'confirm'], function () {
 });
 Route::get('users', [UserController::class, 'getAllUsers']);
 Route::get('orders',[OrderController::class, 'getAllOrders']);
+Route::get('reservations',[ReservationController::class,'getAllReservations']);
 //forgot password
 Route::group(['prefix' => 'forgot-password'], function () {
     Route::post('email', [UserController::class, 'getEmail']);
@@ -89,5 +90,11 @@ Route::group(['prefix' => 'admin'], function () {
         Route::post('viewUserById', [AdminController::class, 'viewUserById']);
         Route::post('updateUserById', [AdminController::class, 'updateUserById']);
         Route::post('deleteUserById', [AdminController::class, 'deleteUserById']);
+        Route::post('viewOrderById', [AdminController::class, 'viewOrderById']);
+        Route::post('updateOrderById', [AdminController::class, 'updateOrderById']);
+        Route::post('deleteOrderById', [AdminController::class, 'deleteOrderById']);
+        Route::post('viewReservationById', [AdminController::class, 'viewReservationById']);
+        Route::post('updateReservationById', [AdminController::class, 'updateReservationById']);
+        Route::post('deleteReservationById', [AdminController::class, 'deleteReservationById']);
     });
 });

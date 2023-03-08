@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Reservation;
+use App\Events\ReservationBooked;
 use App\Models\PhoneVerification;
 use Illuminate\Http\JsonResponse;
 
@@ -14,16 +15,21 @@ class ReservationController extends Controller
         $data = PhoneVerification::Where('phone', $request->phone)->orderBy('created_at', 'desc')->first();
         
             if (intval($data->verify_code) === intval($request->verify_code)) {
-                return Reservation::create([
+                $reservation = Reservation::create([
                     'phone' => $data->phone,
                     'table' => $request->table,
                     'date' => $request->date
                 ]);
+                event(new ReservationBooked($reservation));
+                return $reservation;
             } else {
                 return new JsonResponse([
                     'success' => false,
                     'message' => 'Invalid phone verification code'
                 ]);
             }
+    }
+    public function getAllReservations(){
+        return Reservation::all();
     }
 }

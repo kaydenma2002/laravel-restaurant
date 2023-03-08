@@ -24,8 +24,8 @@ return new class extends Migration
             $table->string('email');
             $table->string('company');
             $table->integer('total');
-            $table->json('item_id');
-            $table->foreign('item_id')->references('id')->on('items')->onDelete('cascade');
+            $table->string('item_id')->nullable();
+            
             $table->timestamps();
         });
     }

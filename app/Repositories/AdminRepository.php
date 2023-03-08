@@ -9,6 +9,9 @@ use App\Interfaces\AdminInterface;
 use App\Models\Cart;
 use App\Models\User;
 use App\Models\Restaurant;
+use App\Models\Order;
+use App\Models\Item;
+use App\Models\Reservation;
 
 class AdminRepository implements AdminInterface
 {
@@ -73,10 +76,50 @@ class AdminRepository implements AdminInterface
         $restaurant->name = $request->restaurant_name;
         $restaurant->address = $request->address;
         $restaurant->save();
-        return response(['success' => true,'message' =>'User updated successfully']);
+        return response(['success' => true, 'message' => 'User updated successfully']);
     }
-    public function deleteUserById($request){
+    public function deleteUserById($request)
+    {
         $user = User::find($request->id);
         return $user->delete();
     }
+    
+    public function viewOrderById($request)
+    {
+        $order = Order::find($request->id);
+        $array = [];
+        $items = Item::all();
+        $items = $items->toArray();
+
+
+        foreach ((unserialize($order->item_id)) as $index_id => $item_id) {
+            foreach ($items as $item) {
+                if (in_array($item_id, $item)) {
+                    array_push($array, $item);
+                    
+                }
+            }
+        }
+        $order->item_id = unserialize($order->item_id);
+
+
+        return [$order, $array];
+    }
+    public function deleteOrderById($request)
+    {
+        $order = Order::find($request->id);
+        return $order->delete();
+    }
+    public function viewReservationById($request)
+    {
+        return Reservation::find($request->id);
+    }
+    public function deleteReservationById($request)
+    {
+        $reservation = Reservation::find($request->id);
+        return $reservation->delete();
+    }
+    
+
+    
 }

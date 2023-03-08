@@ -20,10 +20,15 @@ class Order extends Model
         'company',
         'item_id'
     ];
-    public function user(){
+    protected $casts = [
+        'item_id' => 'array',
+    ];
+    public function user()
+    {
         return $this->belongsTo(User::class);
     }
-    public function items(){
-        return $this->belongsTo(Item::class);
+    public function items()
+    {
+        return $this->hasMany(Item::class);
     }
 }
