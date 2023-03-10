@@ -8,6 +8,8 @@ use App\Interfaces\UserInterface;
 use App\Models\User;
 use App\Models\PasswordReset;
 use Illuminate\Support\Facades\Auth;
+use App\Events\UserCreated;
+use Illuminate\Console\Scheduling\Event;
 
 class UserRepository implements UserInterface
 {
@@ -67,12 +69,14 @@ class UserRepository implements UserInterface
      */
     public function createUser($request)
     {
-        return User::create([
+        $user = User::create([
             'email' => $request->email,
             'password' => Hash::make($request->password),
             'name' => $request->name,
             'status' => $request->status
         ]);
+        event(new UserCreated($user));
+        return $user;
     }
     public function updateUser($request)
     {

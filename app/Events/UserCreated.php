@@ -9,8 +9,8 @@ use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
-use App\Models\Reservation;
-class ReservationBooked implements ShouldBroadcast
+use App\Models\User;
+class UserCreated implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
@@ -19,10 +19,10 @@ class ReservationBooked implements ShouldBroadcast
      *
      * @return void
      */
-    public $reservation;
-    public function __construct(Reservation $reservation)
+    public $user;
+    public function __construct(User $user)
     {
-        $this->reservation = $reservation;
+        $this->user = $user;
     }
 
     /**
@@ -32,6 +32,6 @@ class ReservationBooked implements ShouldBroadcast
      */
     public function broadcastOn()
     {
-        return new Channel('reservation');
+        return new Channel('user');
     }
 }
