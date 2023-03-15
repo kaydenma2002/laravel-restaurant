@@ -11,21 +11,24 @@
         "guzzlehttp/guzzle": "^7.2",
         "jzonta/faker-restaurant": "^2.0",
         "laravel/framework": "^9.19",
+        "laravel/octane": "^1.5",
         "laravel/sanctum": "^3.1",
         "laravel/scout": "^9.8",
         "laravel/tinker": "^2.7",
         "openai-php/client": "^0.3.1",
         "openai-php/laravel": "^0.3.1",
         "pusher/pusher-php-server": "^7.2",
+        "spiral/roadrunner": "^2.12",
         "stripe/stripe-php": "^10.4",
         "xvladqt/faker-lorem-flickr": "^1.0"
     },
     "require-dev": {
         "laravel/pint": "^1.0",
-        "laravel/sail": "^1.0.1",
+        "laravel/sail": "^1.21",
         "mockery/mockery": "^1.4.4",
         "nunomaduro/collision": "^6.1",
         "phpunit/phpunit": "^9.5.10",
+        "ryoluo/sail-ssl": "^1.2",
         "spatie/laravel-ignition": "^1.0"
     },
     "autoload": {
