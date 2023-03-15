@@ -29,7 +29,11 @@ return [
     */
 
     'env' => env('APP_ENV', 'production'),
-
+    'secure' => env('APP_SECURE', true),
+    'force_https' => env(
+        'APP_FORCE_HTTPS',
+        true
+    ),
     /*
     |--------------------------------------------------------------------------
     | Application Debug Mode
@@ -54,9 +58,11 @@ return [
     |
     */
 
-    'url' => env('APP_URL', 'http://localhost'),
+    'url' => env('APP_URL', 'https://localhost'),
 
-    'asset_url' => env('ASSET_URL'),
+
+    'asset_url' => env('ASSET_URL', 'https://localhost'),
+
 
     /*
     |--------------------------------------------------------------------------
