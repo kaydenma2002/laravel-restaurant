@@ -16,7 +16,7 @@ class ChatController extends Controller
     public function sendMessage(Request $request)
     {
         $message = strtolower($request->message);
-        if (!Str::contains($message, 'order') && !Str::contains($message, 'reservation')  && !Str::contains($message, 'contact')) {
+        if (!Str::contains($message, 'order') || !Str::contains($message, 'reservation')  ||!Str::contains($message, 'contact')) {
             $reply = "Please type something like: order, reservation, contact";
         } else {
             if (Str::contains($message, 'contact')) {

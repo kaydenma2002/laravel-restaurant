@@ -11,10 +11,10 @@ use App\Http\Controllers\DemoController;
 use App\Http\Controllers\RestaurantController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\ChatController;
+use App\Http\Controllers\PrivateChatController;
 use App\Http\Controllers\PhoneVerificationController;
 use App\Http\Controllers\ReservationController;
-use App\Models\Reservation;
-use App\Models\User;
+
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -47,6 +47,7 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
             Route::post('logout', [UserController::class, 'logout']);
             Route::get('menu', [MenuController::class, 'getAllItem']);
             Route::post('messages', [ChatController::class, 'sendMessage']);
+            Route::post('private-messages', [PrivateChatController::class, 'index']);
             Route::post('removeCartById', [CartController::class, 'removeById']);
         }
     );
