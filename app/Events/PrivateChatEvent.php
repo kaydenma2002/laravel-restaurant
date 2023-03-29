@@ -9,23 +9,26 @@ use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
-use APp\Models\PrivateChat;
+use App\Models\PrivateChat;
+use App\Models\User;
+
 class PrivateChatEvent implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
-    public $recipient;
-    public $sender;
+    
     public $message;
+    public $sender;
+    public $recipient;
     /**
      * Create a new event instance.
      *
      * @return void
      */
-    public function __construct($sender,$recipient,$message)
+    public function __construct($sender, $recipient,$message)
     {
-        $this->sender = $sender;
-        $this->recipient = $recipient;
         $this->message = $message;
+        $this->sender = $sender; 
+        $this->recipient = $recipient; 
     }
 
     /**
@@ -37,4 +40,5 @@ class PrivateChatEvent implements ShouldBroadcast
     {
         return new PrivateChannel('private-chat.' . $this->sender . '.' . $this->recipient);
     }
+    
 }

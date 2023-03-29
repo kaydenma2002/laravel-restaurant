@@ -9,7 +9,8 @@ interface UserInterface
     
     public function getAllUsers();
     public function createUser($request);
-    public function getUserById($request);
+    public function getProfile($request);
+    public function getRecipient($request);
     public function updateUser($request);
     public function deleteUser($userId);
     public function confirmUser($request);

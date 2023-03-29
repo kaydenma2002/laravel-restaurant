@@ -12,18 +12,21 @@ class PrivateChatController extends Controller
     {
         $sender = $request->user();
         $message = $request->input('message');
-        $recipient = 2;
-        $data = [
-            'sender_id' => $sender->id,
-            'recipient_id' => 2,
-            'message' => $message,
-            'created_at' => Carbon::now()->toDateTimeString(),
-        ];
+        $recipient_id = $request->recipient_id;
+        
 
-        PrivateChat::create($data);
-
-        event(new PrivateChatEvent($sender->id,$recipient,$message));
+        $PrivateChat = new PrivateChat;
+        $PrivateChat->sender_id = $sender->id;
+        $PrivateChat->recipient_id = $recipient_id;
+        $PrivateChat->message = $message;
+        $PrivateChat->created_at = Carbon::now()->toDateTimeString();
+        $PrivateChat->save();
+        
+        broadcast(new PrivateChatEvent($sender->id,$recipient_id,$message))->toOthers();
 
         return response()->json(['status' => 'Message sent!']);
+    }
+    public function getPrivateChat(Request $request){
+        return PrivateChat::where([['recipient_id',$request->recipient_id],['sender_id',$request->sender_id]])->orWhere([['recipient_id',$request->sender_id],['sender_id',$request->recipient_id]])->orderBy('id', 'ASC')->get();
     }
 }

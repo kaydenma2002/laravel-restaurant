@@ -3,7 +3,7 @@
 namespace App\Repositories;
 
 use Illuminate\Support\Facades\Hash;
-
+use Illuminate\Support\Facades\Auth;
 use App\Interfaces\OrderInterface;
 use App\Models\Order;
 use App\Models\Item;
@@ -20,10 +20,14 @@ class OrderRepository implements OrderInterface
             'city' => $request->city,
             'zip_code' => $request->zip_code,
             'company' => $request->company,
-            'total' => $request->total,
+            'total' => $request->total / 100,
             'email' => $request->email,
-            'item_id' => serialize($request->item_id)
+            'item_id' => serialize($request->item_id),
+            'user_id'=> Auth::id()
         ]);
+    }
+    public function getOrder(){
+        return Order::where('user_id',Auth::id())->get();
     }
     public function getAllOrders()
     {

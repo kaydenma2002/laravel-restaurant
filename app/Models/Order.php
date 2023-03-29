@@ -18,7 +18,8 @@ class Order extends Model
         'email',
         'total',
         'company',
-        'item_id'
+        'item_id',
+        'user_id'
     ];
     protected $casts = [
         'item_id' => 'array',
@@ -31,4 +32,5 @@ class Order extends Model
     {
         return $this->hasMany(Item::class);
     }
+
 }

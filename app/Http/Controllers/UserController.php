@@ -27,7 +27,11 @@ class UserController extends Controller
     }
     public function profile(Request $request)
     {
-        return $this->userInterface->getUserById($request);
+        return $this->userInterface->getProfile($request);
+    }
+    public function getRecipient(Request $request)
+    {
+        return $this->userInterface->getRecipient($request);
     }
     public function getAllUsers()
     {

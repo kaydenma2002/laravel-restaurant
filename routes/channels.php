@@ -25,6 +25,6 @@ Broadcast::channel('reservation',function(){
 Broadcast::channel('user', function () {
     return true;
 });
-Broadcast::channel('private-chat.{userId1}.{userId2}', function ($user, $userId1, $userId2) {
-    return ($user->id == $userId1 || $user->id == $userId2);
+Broadcast::channel('private-chat.{userId1}.{userId2}', function (User $user, $userId1, $userId2) {
+    return (int) $user->id === (int) $userId1 || (int)$user->id === (int) $userId2;
 });

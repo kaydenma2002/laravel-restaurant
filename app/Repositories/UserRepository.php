@@ -57,7 +57,7 @@ class UserRepository implements UserInterface
     }
     public function getAllUsers()
     {
-        return User::with('restaurant')->get();
+        return User::with('restaurant')->where('id','!=',Auth::id())->get();
     }
 
 
@@ -102,9 +102,12 @@ class UserRepository implements UserInterface
      * @param [type] $id
      * @return post
      */
-    public function getUserById($request)
+    public function getProfile($request)
     {
         return $request->user();
+    }
+    public function getRecipient($request){
+        return User::find($request->id);
     }
 
     /**

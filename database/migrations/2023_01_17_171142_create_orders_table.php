@@ -23,9 +23,10 @@ return new class extends Migration
             $table->string('zip_code');
             $table->string('email');
             $table->string('company');
-            $table->integer('total');
+            $table->string('total');
             $table->string('item_id')->nullable();
-            
+            $table->unsignedBigInteger('user_id')->nullable();
+            $table->foreign('user_id')->references('id')->on('users');
             $table->timestamps();
         });
     }
