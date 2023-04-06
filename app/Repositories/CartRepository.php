@@ -10,10 +10,20 @@ use App\Models\User;
 class CartRepository implements CartInterface
 {
     public function create($request){
-        return Cart::create([
-            'user_id' => Auth::id(),
-            'item_id' => $request->item_id
-        ]);
+        $cart = Cart::where('user_id', Auth::id())
+                    ->where('item_id', $request->item_id)
+                    ->first();
+        
+        if(!$cart){
+            return Cart::create([
+                'user_id' => Auth::id(),
+                'item_id' => $request->item_id,
+                'quantity' => 1
+            ]);
+        }else{
+            $cart->increment('quantity');
+            return $cart;
+        }
     }
     public function remove()
     {

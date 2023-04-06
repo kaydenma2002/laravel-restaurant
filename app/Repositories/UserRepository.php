@@ -138,9 +138,9 @@ class UserRepository implements UserInterface
         if ($user->status === '0') {
             $user->status = '1';
             $user->save();
-            return redirect('http://localhost:5173/login');
+            return redirect('https://localhost:3001/login');
         } else {
-            return redirect('http://localhost:5173/login');
+            return redirect('https://localhost:3001/login');
         }
     }
     public function getUserByEmail($request)

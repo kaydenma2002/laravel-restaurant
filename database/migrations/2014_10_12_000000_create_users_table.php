@@ -18,6 +18,11 @@ return new class extends Migration
             $table->id();
             $table->string('name')->nullable();
             $table->string('email')->unique();
+            $table->string('phone')->nullable();
+            $table->string('company')->nullable();
+            $table->string('street')->nullable();
+            $table->string('city')->nullable();
+            $table->string('zip_code')->nullable();
             $table->string('user_type')->default('0');
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');

@@ -21,5 +21,9 @@ class Item extends Model
     {
         return $this->belongsTo(Cart::class);
     }
+    public function restaurant(){
+        return $this->belongsTo(Restaurant::class);
+    }
+    
     
 }
