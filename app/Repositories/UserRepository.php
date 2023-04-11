@@ -3,8 +3,9 @@
 namespace App\Repositories;
 
 use Illuminate\Support\Facades\Hash;
-
+use Illuminate\Http\JsonResponse;
 use App\Interfaces\UserInterface;
+use App\Models\PhoneVerification;
 use App\Models\User;
 use App\Models\PasswordReset;
 use Illuminate\Support\Facades\Auth;
@@ -69,14 +70,29 @@ class UserRepository implements UserInterface
      */
     public function createUser($request)
     {
-        $user = User::create([
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
-            'name' => $request->name,
-            'status' => $request->status
-        ]);
-        event(new UserCreated($user));
-        return $user;
+        $data = PhoneVerification::Where('phone', $request->phone)->where('type','0')->orderBy('created_at', 'desc')->first();
+        
+            if (intval($data->verify_code) === intval($request->verify_code)) {
+                $user = User::create([
+                    'email' => $request->email,
+                    'password' => Hash::make($request->password),
+                    'name' => $request->name,
+                    'status' => $request->status,
+                    'phone' => $request->phone,
+                    'street' => $request->street,
+                    'city' => $request->city,
+                    'zip_code' => $request->zip_code,
+        
+                ]);
+                event(new UserCreated($user));
+                return $user;
+            } else {
+                return new JsonResponse([
+                    'success' => false,
+                    'message' => 'Invalid phone verification code'
+                ]);
+            }
+        
     }
     public function updateUser($request)
     {

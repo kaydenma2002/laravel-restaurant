@@ -12,7 +12,7 @@ class ReservationController extends Controller
 {
     public function index(Request $request)
     {
-        $data = PhoneVerification::Where('phone', $request->phone)->orderBy('created_at', 'desc')->first();
+        $data = PhoneVerification::Where('phone', $request->phone)->where('type','1')->orderBy('created_at', 'desc')->first();
         
             if (intval($data->verify_code) === intval($request->verify_code)) {
                 $reservation = Reservation::create([

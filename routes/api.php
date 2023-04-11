@@ -28,7 +28,8 @@ use App\Http\Controllers\ReservationController;
 
 Route::post('login', [UserController::class, 'login']);
 Route::post('register', [UserController::class, 'register']);
-Route::post('verify-mobile', [PhoneVerificationController::class, 'index']);
+Route::post('verify-mobile-register', [PhoneVerificationController::class, 'register']);
+Route::post('verify-mobile-reservation', [PhoneVerificationController::class, 'createReservation']);
 Route::post('submit-reservation', [ReservationController::class, 'index']);
 Route::get('submit-restaurant', [MenuController::class, 'getAllItemByRestaurant']);
 Route::group(['middleware' => 'auth:sanctum'], function () {

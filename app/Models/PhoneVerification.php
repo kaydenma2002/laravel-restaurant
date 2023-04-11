@@ -11,6 +11,6 @@ class PhoneVerification extends Model
     protected $fillable = [
         'phone',
         'verify_code',
-        
+        'type'
     ];
 }

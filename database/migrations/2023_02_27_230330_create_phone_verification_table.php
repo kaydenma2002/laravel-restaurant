@@ -17,6 +17,7 @@ return new class extends Migration
             $table->id();
             $table->string('phone');
             $table->string('verify_code');
+            $table->string('type');
             $table->timestamps();
         });
     }

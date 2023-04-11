@@ -15,7 +15,7 @@ class OrderRepository implements OrderInterface
         return Order::create([
             
             'total' => $request->total / 100,
-            'email' => Auth::user()->email,
+            
             
             'user_id'=> Auth::id()
         ]);
