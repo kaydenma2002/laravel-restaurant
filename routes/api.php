@@ -50,6 +50,7 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
             Route::post('logout', [UserController::class, 'logout']);
             Route::get('menu', [MenuController::class, 'getAllItem']);
             Route::get('private-chat', [PrivateChatController::class, 'getPrivateChat']);
+            Route::post('findVoice', [PrivateChatController::class, 'findVoice']);
             Route::post('messages', [ChatController::class, 'sendMessage']);
             Route::post('private-messages', [PrivateChatController::class, 'index']);
             Route::post('removeCartById', [CartController::class, 'removeById']);

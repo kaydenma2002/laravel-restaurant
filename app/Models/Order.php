@@ -19,7 +19,8 @@ class Order extends Model
         'total',
         'company',
         'item_id',
-        'user_id'
+        'user_id',
+        'note'
     ];
     protected $casts = [
         'item_id' => 'array',

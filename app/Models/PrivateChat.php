@@ -12,6 +12,7 @@ class PrivateChat extends Model
         'message',
         'recipient_id',
         'sender_id',
+        'type'
     ];
     public function sender()
     {
