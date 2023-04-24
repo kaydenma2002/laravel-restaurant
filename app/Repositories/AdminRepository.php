@@ -10,6 +10,7 @@ use App\Models\Cart;
 use App\Models\User;
 use App\Models\Restaurant;
 use App\Models\Order;
+use App\Models\OrderItem;
 use App\Models\Item;
 use App\Models\Reservation;
 
@@ -86,24 +87,7 @@ class AdminRepository implements AdminInterface
     
     public function viewOrderById($request)
     {
-        $order = Order::find($request->id);
-        $array = [];
-        $items = Item::all();
-        $items = $items->toArray();
-
-
-        foreach ((unserialize($order->item_id)) as $index_id => $item_id) {
-            foreach ($items as $item) {
-                if (in_array($item_id, $item)) {
-                    array_push($array, $item);
-                    
-                }
-            }
-        }
-        $order->item_id = unserialize($order->item_id);
-
-
-        return [$order, $array];
+        return OrderItem::with('item')->where('order_id',$request->id)->get();
     }
     public function deleteOrderById($request)
     {
@@ -118,8 +102,5 @@ class AdminRepository implements AdminInterface
     {
         $reservation = Reservation::find($request->id);
         return $reservation->delete();
-    }
-    
-
-    
+    }    
 }

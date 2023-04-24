@@ -35,14 +35,7 @@ class OrderRepository implements OrderInterface
     public function getAllOrders()
     {
 
-        $orders = Order::all();
-
-        
-
-        
-
-
-
+        $orders = Order::with('user')->get();
         return $orders;
     }
 }
