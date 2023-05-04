@@ -20,6 +20,12 @@ class OrderController extends Controller
     public function getOrder(){
         return $this->orderInterface->getOrder();
     }
+    public function getOrderById(Request $request){
+        return $this->orderInterface->getOrderById($request);
+    }
+    public function getOrderItem(Request $request){
+        return $this->orderInterface->getOrderItem($request);
+    }
     public function getAllOrders(){
         return $this->orderInterface->getAllOrders();
     }

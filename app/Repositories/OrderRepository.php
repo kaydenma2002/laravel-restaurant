@@ -30,7 +30,13 @@ class OrderRepository implements OrderInterface
         ]);
     }
     public function getOrder(){
-        return Order::where('user_id',Auth::id())->get();
+        return Order::with('user')->where('user_id',Auth::id())->get();
+    }
+    public function getOrderById($request){
+        return Order::find($request->id);
+    }
+    public function getOrderItem($request){
+        return OrderItem::with('order')->with('item')->where('order_id',$request->id)->get();
     }
     public function getAllOrders()
     {

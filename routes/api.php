@@ -43,6 +43,8 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
             Route::get('restaurant', [RestaurantController::class, 'index']);
             Route::get('recipient',[UserController::class, 'getRecipient']);
             Route::get('order',[OrderController::class, 'getOrder']);
+            Route::get('orderById',[OrderController::class, 'getOrderById']);
+            Route::get('order-item',[OrderController::class,'getOrderItem']);
             Route::group(['prefix' => 'user'], function () {
                 Route::get('/', [UserController::class, 'profile']);
                 Route::get('/chat', [ChatController::class, 'getAllChat']);
@@ -73,14 +75,17 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     });
 
     Route::post('stripe', [StripePaymentController::class, 'stripePost']);
-    Route::get('restaurant/search', [RestaurantController::class, 'search']);
+    
 });
 Route::group(['prefix' => 'confirm'], function () {
     Route::group(['prefix' => 'create'], function () {
         Route::get('user', [UserController::class, 'confirm']);
     });
 });
-
+Route::group(['prefix' => 'create'], function () {
+    Route::post('demo', [DemoController::class, 'create']);
+});
+Route::get('restaurant/search', [RestaurantController::class, 'search']);
 Route::get('orders',[OrderController::class, 'getAllOrders']);
 Route::get('reservations',[ReservationController::class,'getAllReservations']);
 //forgot password
