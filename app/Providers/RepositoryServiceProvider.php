@@ -20,7 +20,8 @@ use App\Interfaces\RestaurantInterface;
 use App\Repositories\RestaurantRepository;
 use App\Repositories\AdminRepository;
 use App\Interfaces\AdminInterface;
-
+use App\Repositories\ItemRepository;
+use App\Interfaces\ItemInterface;
 
 class RepositoryServiceProvider extends ServiceProvider
 {
@@ -49,5 +50,6 @@ class RepositoryServiceProvider extends ServiceProvider
         $this->app->bind(CartInterface::class, CartRepository::class);
         $this->app->bind(RestaurantInterface::class, RestaurantRepository::class);
         $this->app->bind(AdminInterface::class, AdminRepository::class);
+        $this->app->bind(ItemInterface::class, ItemRepository::class);
     }
 }

@@ -14,7 +14,7 @@ use App\Http\Controllers\ChatController;
 use App\Http\Controllers\PrivateChatController;
 use App\Http\Controllers\PhoneVerificationController;
 use App\Http\Controllers\ReservationController;
-
+use App\Http\Controllers\ItemController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -41,24 +41,28 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
         function () {
             Route::get('users', [UserController::class, 'getAllUsers']);
             Route::get('restaurant', [RestaurantController::class, 'index']);
+            Route::post('restaurant', [RestaurantController::class, 'getRestaurantById']);
             Route::get('recipient',[UserController::class, 'getRecipient']);
             Route::get('order',[OrderController::class, 'getOrder']);
             Route::get('orderById',[OrderController::class, 'getOrderById']);
             Route::get('order-item',[OrderController::class,'getOrderItem']);
+            Route::get('itemById',[ItemController::class,'getItemById']);
             Route::group(['prefix' => 'user'], function () {
                 Route::get('/', [UserController::class, 'profile']);
                 Route::get('/chat', [ChatController::class, 'getAllChat']);
             });
             Route::post('logout', [UserController::class, 'logout']);
-            Route::get('menu', [MenuController::class, 'getAllItem']);
+            
             Route::get('private-chat', [PrivateChatController::class, 'getPrivateChat']);
             Route::post('findVoice', [PrivateChatController::class, 'findVoice']);
             Route::post('messages', [ChatController::class, 'sendMessage']);
             Route::post('private-messages', [PrivateChatController::class, 'index']);
-            Route::post('removeCartById', [CartController::class, 'removeById']);
+            
         }
     );
     Route::get('cartByUserId', [CartController::class, 'find']);
+    Route::post('removeCartById', [CartController::class, 'removeById']);
+    Route::post('updateCartById',[CartController::class, 'UpdateById']);
     Route::group(['prefix' => 'create'], function () {
         Route::post('order', [OrderController::class, 'create']);
         Route::post('order-item', [OrderController::class, 'createOrderItem']);
@@ -93,7 +97,9 @@ Route::group(['prefix' => 'forgot-password'], function () {
     Route::post('email', [UserController::class, 'getEmail']);
     Route::post('reset-password', [UserController::class, 'resetPassword']);
 });
+Route::post('restaurant/find', [RestaurantController::class, 'getRestaurantByWebId']);
 // admin
+Route::post('menu', [MenuController::class, 'getAllItem']);
 Route::group(['prefix' => 'admin'], function () {
     Route::post('login', [AdminController::class, 'login']);
     Route::group(['middleware' => 'auth:sanctum'], function () {

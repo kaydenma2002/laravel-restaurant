@@ -18,13 +18,11 @@ class Order extends Model
         'email',
         'total',
         'company',
-        'item_id',
+        'restaurant_id',
         'user_id',
         'note'
     ];
-    protected $casts = [
-        'item_id' => 'array',
-    ];
+   
     public function user()
     {
         return $this->belongsTo(User::class);
@@ -32,6 +30,9 @@ class Order extends Model
     public function items()
     {
         return $this->hasMany(OrderItem::class);
+    }
+    public function restaurant(){
+        return $this->belongsTo(Restaurant::class,'restaurant_id','restaurant_id');
     }
 
 }

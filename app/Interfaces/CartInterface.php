@@ -5,7 +5,8 @@ namespace App\Interfaces;
 interface CartInterface
 {
     public function create($request);
-    public function find();
+    public function find($request);
     public function remove();
     public function removeById($request);
+    public function updateById($request);
 }

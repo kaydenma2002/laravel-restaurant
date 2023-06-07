@@ -17,8 +17,8 @@ class OrderController extends Controller
     public function createOrderItem(Request $request){
         return $this->orderInterface->createOrderItem($request);
     }
-    public function getOrder(){
-        return $this->orderInterface->getOrder();
+    public function getOrder(Request $request){
+        return $this->orderInterface->getOrder($request);
     }
     public function getOrderById(Request $request){
         return $this->orderInterface->getOrderById($request);

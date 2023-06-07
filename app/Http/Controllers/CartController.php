@@ -20,9 +20,13 @@ class CartController extends Controller
     {
         return $this->CartInterface->removeById($request);
     }
+    public function UpdateById(Request $request)
+    {
+        return $this->CartInterface->UpdateById($request);
+    }
 
-    public function find(){
-        return $this->CartInterface->find();
+    public function find(Request $request){
+        return $this->CartInterface->find($request);
     }
 
 }
