@@ -89,6 +89,8 @@ Route::group(['prefix' => 'confirm'], function () {
 Route::group(['prefix' => 'create'], function () {
     Route::post('demo', [DemoController::class, 'create']);
 });
+Route::post('menu', [MenuController::class, 'getAllItem']);
+
 Route::get('restaurant/search', [RestaurantController::class, 'search']);
 Route::get('orders',[OrderController::class, 'getAllOrders']);
 Route::get('reservations',[ReservationController::class,'getAllReservations']);
@@ -99,7 +101,6 @@ Route::group(['prefix' => 'forgot-password'], function () {
 });
 Route::post('restaurant/find', [RestaurantController::class, 'getRestaurantByWebId']);
 // admin
-Route::post('menu', [MenuController::class, 'getAllItem']);
 Route::group(['prefix' => 'admin'], function () {
     Route::post('login', [AdminController::class, 'login']);
     Route::group(['middleware' => 'auth:sanctum'], function () {

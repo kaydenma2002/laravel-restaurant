@@ -19,7 +19,13 @@ class MenuRepository implements MenuInterface
         $restaurant = Restaurant::where('web_id', $request->web_id)->first();
         if($restaurant!=null){
             $item = Item::with('restaurant')->where('restaurant_id', $restaurant->restaurant_id)->get();
-            return $item;
+            $category = Item::with('restaurant')->where('restaurant_id', $restaurant->restaurant_id)->pluck('category')->unique();
+            $category = $category->toArray();
+            $returnObject = new \stdClass();
+            $returnObject->item = $item;
+            $returnObject->category = $category;
+            
+            return $returnObject;
         }else{
             return ;
         }
