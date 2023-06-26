@@ -2,7 +2,7 @@
 
 namespace App\Interfaces;
 
-interface DemoInterface
+interface ClaimInterface
 
 {
     public function create($request);

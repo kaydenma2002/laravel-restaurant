@@ -5,17 +5,18 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Demo extends Model
+class Claim extends Model
 {
     use HasFactory;
     protected $fillable = [
-        'name',
-        'email',
-        'company',
-        'zip_code',
-        'phone'
+        'file',
+        'restaurant_id',
+        'user_id'
     ];
     public function user(){
         return $this->belongsTo(User::class);
+    }
+    public function restaurant(){
+        return $this->belongsTo(Restaurant::class,'restaurant_id');
     }
 }

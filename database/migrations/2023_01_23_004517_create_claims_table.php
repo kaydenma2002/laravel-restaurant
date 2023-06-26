@@ -13,15 +13,14 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('demos', function (Blueprint $table) {
+        Schema::create('claims', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->string('company');
-            $table->string('zip_code');
-            $table->string('phone');
-            $table->string('email');
+            $table->longText('file');
+            $table->string('user_type')->default('0');
             $table->unsignedBigInteger('user_id')->unsigned()->nullable();
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->unsignedBigInteger('restaurant_id')->unsigned()->nullable();
+            $table->foreign('restaurant_id')->references('restaurant_id')->on('restaurants')->onDelete('cascade');
             $table->timestamps();
         });
     }
@@ -33,7 +32,7 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('demos');
+        Schema::dropIfExists('claims');
     }
     
 };

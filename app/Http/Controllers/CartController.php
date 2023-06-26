@@ -13,6 +13,15 @@ class CartController extends Controller
     public function create(Request $request){
         return $this->CartInterface->create($request);
     }
+    public function createCartBeforeLogin(Request $request){
+        return $this->CartInterface->createCartBeforeLogin($request);
+    }
+    public function getCartBeforeLogin(Request $request){
+        return $this->CartInterface->getCartBeforeLogin($request);
+    }
+    public function combineCart(Request $request){
+        return $this->CartInterface->combineCart($request);
+    }
     public function remove(Request $request){
         return $this->CartInterface->remove($request);
     }

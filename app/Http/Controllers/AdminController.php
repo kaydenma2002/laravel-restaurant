@@ -20,12 +20,23 @@ class AdminController extends Controller
     {
         return $this->adminInterface->logout($request);
     }
-    public function dashboard()
+    public function users(Request $request)
     {
-        return $this->adminInterface->dashboard();
+        return $this->adminInterface->users($request);
+    }
+    public function restaurants(Request $request)
+    {
+        return $this->adminInterface->restaurants($request);
+    }
+    public function claims(Request $request)
+    {
+        return $this->adminInterface->claims($request);
     }
     public function viewUserById(Request $request){
         return $this->adminInterface->viewUserById($request);
+    }
+    public function viewRestaurantById(Request $request){
+        return $this->adminInterface->viewRestaurantById($request);
     }
     
     public function deleteUserById(Request $request)

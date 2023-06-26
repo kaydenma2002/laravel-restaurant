@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\StripePaymentController;
-use App\Http\Controllers\DemoController;
+use App\Http\Controllers\ClaimController;
 use App\Http\Controllers\RestaurantController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\ChatController;
@@ -32,6 +32,8 @@ Route::post('verify-mobile-register', [PhoneVerificationController::class, 'regi
 Route::post('verify-mobile-reservation', [PhoneVerificationController::class, 'createReservation']);
 Route::post('submit-reservation', [ReservationController::class, 'index']);
 Route::get('submit-restaurant', [MenuController::class, 'getAllItemByRestaurant']);
+Route::post('create/cartBeforeLogin',[CartController::class, 'createCartBeforeLogin']);
+Route::get('getCartBeforeLogin',[CartController::class, 'getCartBeforeLogin']);
 Route::group(['middleware' => 'auth:sanctum'], function () {
 
 
@@ -57,7 +59,7 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
             Route::post('findVoice', [PrivateChatController::class, 'findVoice']);
             Route::post('messages', [ChatController::class, 'sendMessage']);
             Route::post('private-messages', [PrivateChatController::class, 'index']);
-            
+            Route::post('combineCart',[CartController::class,'combineCart']);
         }
     );
     Route::get('cartByUserId', [CartController::class, 'find']);
@@ -67,7 +69,7 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
         Route::post('order', [OrderController::class, 'create']);
         Route::post('order-item', [OrderController::class, 'createOrderItem']);
         Route::post('cart', [CartController::class, 'create']);
-        Route::post('demo', [DemoController::class, 'create']);
+        Route::post('claim', [ClaimController::class, 'create']);
     });
     Route::group(['prefix' => 'remove'], function () {
         Route::post('order', [OrderController::class, 'remove']);
@@ -86,9 +88,7 @@ Route::group(['prefix' => 'confirm'], function () {
         Route::get('user', [UserController::class, 'confirm']);
     });
 });
-Route::group(['prefix' => 'create'], function () {
-    Route::post('demo', [DemoController::class, 'create']);
-});
+
 Route::post('menu', [MenuController::class, 'getAllItem']);
 
 Route::get('restaurant/search', [RestaurantController::class, 'search']);
@@ -105,8 +105,11 @@ Route::group(['prefix' => 'admin'], function () {
     Route::post('login', [AdminController::class, 'login']);
     Route::group(['middleware' => 'auth:sanctum'], function () {
         Route::post('logout', [AdminController::class, 'logout']);
-        Route::get('dashboard', [AdminController::class, 'dashboard']);
-        Route::post('viewUserById', [AdminController::class, 'viewUserById']);
+        Route::get('users', [AdminController::class, 'users']);
+        Route::get('restaurants', [AdminController::class, 'restaurants']);
+        Route::get('claims',[AdminController::class,'claims']);
+        Route::get('viewUserById', [AdminController::class, 'viewUserById']);
+        Route::get('viewRestaurantById', [AdminController::class, 'viewRestaurantById']);
         Route::post('updateUserById', [AdminController::class, 'updateUserById']);
         Route::post('deleteUserById', [AdminController::class, 'deleteUserById']);
         Route::post('viewOrderById', [AdminController::class, 'viewOrderById']);

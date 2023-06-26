@@ -6,8 +6,11 @@ interface AdminInterface
 {
     public function login($request);
     public function logout($request);
-    public function dashboard();
+    public function users($request);
+    public function restaurants($request);
+    public function claims($request);
     public function viewUserById($request);
+    public function viewRestaurantById($request);
     public function updateUserById($request);
     public function deleteUserById($request);
     public function viewOrderById($request);

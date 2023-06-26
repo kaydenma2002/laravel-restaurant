@@ -12,13 +12,16 @@ class Restaurant extends Model
 {
     protected $guarded = ['id'];
 
-
+    protected $primaryKey = 'restaurant_id';
     use HasFactory;
 
 
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+    public function claims(){
+        return $this->hasMany(Claim::class,'restaurant_id');
     }
     public function menu()
     {
@@ -31,6 +34,10 @@ class Restaurant extends Model
     public function carts()
     {
         return $this->hasMany(Cart::class);
+    }
+    public function cartBeForeLogin()
+    {
+        return $this->hasMany(CartBeforeLogin::class);
     }
     public function items()
     {

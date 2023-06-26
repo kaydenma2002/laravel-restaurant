@@ -43,8 +43,8 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
-    public function restaurant(){
-        return $this->hasOne(Restaurant::class);
+    public function restaurants(){
+        return $this->hasMany(Restaurant::class,'restaurant_id');
     }
     public function orders(){
         return $this->hasMany(Order::class);
@@ -53,8 +53,8 @@ class User extends Authenticatable
     {
         return $this->hasMany(Cart::class);
     }
-    public function demo(){
-        return $this->hasOne(Demo::class);
+    public function claims(){
+        return $this->hasMany(Claim::class);
     }
     public function password_reset(){
         return $this->hasOne(PasswordReset::class);
