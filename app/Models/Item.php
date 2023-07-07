@@ -26,7 +26,7 @@ class Item extends Model
         return $this->belongsTo(CartBeforeLogin::class);
     }
     public function restaurant(){
-        return $this->belongsTo(Restaurant::class,'restaurant_id','restaurant_id');
+        return $this->belongsTo(Restaurant::class,'restaurant_id');
     }
     
     

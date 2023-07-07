@@ -15,8 +15,17 @@ return new class extends Migration
     {
         Schema::create('claims', function (Blueprint $table) {
             $table->id();
-            $table->longText('file');
-            $table->string('user_type')->default('0');
+            
+            $table->string('email');
+            $table->string('name');
+            $table->string('address');
+            $table->string('city');
+            $table->string('state');
+            $table->string('zip_code');
+            $table->string('phone');
+            $table->string('ss4');
+            $table->string('food_license');
+            $table->string('status')->default('0');
             $table->unsignedBigInteger('user_id')->unsigned()->nullable();
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->unsignedBigInteger('restaurant_id')->unsigned()->nullable();

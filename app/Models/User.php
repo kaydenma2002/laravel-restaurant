@@ -21,6 +21,11 @@ class User extends Authenticatable
         'id',
         'name',
         'email',
+        'phone',
+        'status',
+        'street',
+        'city',
+        'zip_code',
         'password',
         'status'
     ];
@@ -44,7 +49,7 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
     public function restaurants(){
-        return $this->hasMany(Restaurant::class,'restaurant_id');
+        return $this->hasMany(Restaurant::class);
     }
     public function orders(){
         return $this->hasMany(Order::class);

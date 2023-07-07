@@ -11,7 +11,18 @@ use Illuminate\Support\Str;
 class Restaurant extends Model
 {
     protected $guarded = ['id'];
-
+    protected $fillable = [
+        'id',
+        'name',
+        'phone',
+        'status',
+        'street',
+        'address',
+        'city',
+        'zip_code',
+        'password',
+        'status'
+    ];
     protected $primaryKey = 'restaurant_id';
     use HasFactory;
 

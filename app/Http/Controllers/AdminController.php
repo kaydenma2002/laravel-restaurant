@@ -32,13 +32,31 @@ class AdminController extends Controller
     {
         return $this->adminInterface->claims($request);
     }
+    public function orders(Request $request)
+    {
+        return $this->adminInterface->orders($request);
+    }
     public function viewUserById(Request $request){
         return $this->adminInterface->viewUserById($request);
+    }
+    public function viewClaimById(Request $request){
+        return $this->adminInterface->viewClaimById($request);
+    }
+    public function updateRestaurantById(Request $request){
+        return $this->adminInterface->updateRestaurantById($request);
     }
     public function viewRestaurantById(Request $request){
         return $this->adminInterface->viewRestaurantById($request);
     }
-    
+    public function viewRestaurantsByUserId(Request $request){
+        return $this->adminInterface->viewRestaurantsByUserId($request);
+    }
+    public function closeRestaurantById(Request $request){
+        return $this->adminInterface->closeRestaurantById($request);
+    }
+    public function approveClaimById(Request $request){
+        return $this->adminInterface->approveClaimById($request);
+    }
     public function deleteUserById(Request $request)
     {
         return $this->adminInterface->deleteUserById($request);
@@ -50,6 +68,10 @@ class AdminController extends Controller
     public function viewOrderById(Request $request)
     {
         return $this->adminInterface->viewOrderById($request);
+    }
+    public function viewOrdersByRestaurantId(Request $request)
+    {
+        return $this->adminInterface->viewOrdersByRestaurantId($request);
     }
     public function deleteOrderById(Request $request)
     {

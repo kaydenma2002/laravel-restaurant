@@ -57,15 +57,15 @@ class AdminRepository implements AdminInterface
     {
         if ($request->status != 'null') {
             if ($request->key !== 'null' && $request->order !== 'null') {
-                return  User::where('user_type', 0)->where('name', 'LIKE', '%' . $request->search . '%')->where('status', $request->status)->orderBy($request->key, $request->order)->paginate($request->paginate ?? 10);
+                return  User::with('restaurants')->where('user_type', 0)->where('name', 'LIKE', '%' . $request->search . '%')->where('status', $request->status)->orderBy($request->key, $request->order)->paginate($request->paginate ?? 10);
             } else {
-                return  User::where('user_type', 0)->where('name', 'LIKE', '%' . $request->search . '%')->where('status', $request->status)->paginate($request->paginate ?? 10);
+                return  User::with('restaurants')->where('user_type', 0)->where('name', 'LIKE', '%' . $request->search . '%')->where('status', $request->status)->paginate($request->paginate ?? 10);
             }
-        }else{
+        } else {
             if ($request->key !== 'null' && $request->order !== 'null') {
-                return  User::where('user_type', 0)->where('name', 'LIKE', '%' . $request->search . '%')->orderBy($request->key, $request->order)->paginate($request->paginate ?? 10);
+                return  User::with('restaurants')->where('user_type', 0)->where('name', 'LIKE', '%' . $request->search . '%')->orderBy($request->key, $request->order)->paginate($request->paginate ?? 10);
             } else {
-                return  User::where('user_type', 0)->where('name', 'LIKE', '%' . $request->search . '%')->paginate($request->paginate ?? 10);
+                return  User::with('restaurants')->where('user_type', 0)->where('name', 'LIKE', '%' . $request->search . '%')->paginate($request->paginate ?? 10);
             }
         }
     }
@@ -85,55 +85,97 @@ class AdminRepository implements AdminInterface
             }
         }
     }
-    public function claims($request){
+    public function claims($request)
+    {
         if ($request->status != 'null') {
             if ($request->key !== 'null' && $request->order !== 'null') {
-                return Claim::with(['restaurant','user'])->where('name', 'LIKE', '%' . $request->search . '%')->where('status', $request->status)->orderBy($request->key, $request->order)->paginate($request->paginate ?? 10);
+                return Claim::with(['restaurant', 'user'])->where('name', 'LIKE', '%' . $request->search . '%')->where('status', $request->status)->orderBy($request->key, $request->order)->paginate($request->paginate ?? 10);
             } else {
-                return Claim::with(['restaurant','user'])->where('name', 'LIKE', '%' . $request->search . '%')->where('status', $request->status)->paginate($request->paginate ?? 10);
+                return Claim::with(['restaurant', 'user'])->where('name', 'LIKE', '%' . $request->search . '%')->where('status', $request->status)->paginate($request->paginate ?? 10);
             }
         } else {
             if ($request->key !== 'null' && $request->order !== 'null') {
-                return Claim::with(['restaurant','user'])->whereHas('user', function ($query) use ($request) {
+                return Claim::with(['restaurant', 'user'])->whereHas('user', function ($query) use ($request) {
                     $query->where('name', 'LIKE', '%' . $request->search . '%');
                 })->paginate($request->paginate ?? 10);
             } else {
-                return Claim::with(['restaurant','user'])->whereHas('user', function ($query) use ($request) {
+                return Claim::with(['restaurant', 'user'])->whereHas('user', function ($query) use ($request) {
                     $query->where('name', 'LIKE', '%' . $request->search . '%');
                 })->paginate($request->paginate ?? 10);
             }
         }
-        
+    }
+    public function orders($request){
+        if ($request->status != 'null') {
+            if ($request->key !== 'null' && $request->order !== 'null') {
+                return Order::with(['user','restaurant'])->where('status', $request->status)->orderBy($request->key, $request->order)->paginate($request->paginate ?? 10);
+            } else {
+                return Order::with(['user','restaurant'])->where('status', $request->status)->paginate($request->paginate ?? 10);
+            }
+        } else {
+            if ($request->key !== 'null' && $request->order !== 'null') {
+                return Order::with(['user','restaurant'])->orderBy($request->key, $request->order)->paginate($request->paginate ?? 10);
+            } else {
+                return Order::with(['user','restaurant'])->paginate($request->paginate ?? 10);
+            }
+        }
     }
     public function viewUserById($request)
     {
-        $user = User::find($request->id); // Assuming there is a User model
+        $user = User::with('restaurants')->find($request->id); // Assuming there is a User model
 
-        if ($user->restaurants->isEmpty()) {
-            return $user;
-        }
 
-        return $user->restaurants;
+
+        return $user;
     }
-    public function viewRestaurantById($request){
-        $restaurant = Restaurant::find($request->id); // Assuming there is a User model
-
+    public function viewRestaurantById($request)
+    {
+        return Restaurant::with('user')->where('id', $request->id)->first();
+    }
+    public function updateRestaurantById($request){
+        $restaurant = Restaurant::find($request->restaurant['restaurant_id']);
         
+            $restaurant->name = $request->restaurant['name'];
+            $restaurant->address = $request->restaurant['address'];
+            $restaurant->city = $request->restaurant['city'];
+            $restaurant->state = $request->restaurant['state'];
+            $restaurant->zip_code = $request->restaurant['zip_code'];
+            $restaurant->phone = $request->restaurant['phone'];
+            
 
-        return $restaurant->user;
+            return $restaurant->save();
+    }
+    public function closeRestaurantById($request)
+    {
+        $restaurant = Restaurant::find($request->id);
+        $restaurant->status = "Deactive";
+        return $restaurant->save();
+    }
+    public function viewRestaurantsByUserId($request)
+    {
+        return Restaurant::where('user_id', $request->user_id)->get();
+    }
+    public function viewClaimById($request)
+    {
+        return Restaurant::with('user')->where('id', $request->id)->first();
     }
     public function updateUserById($request)
     {
-        $user = User::find($request->id);
-        $user->email = $request->email;
-        $user->name = $request->name;
-        $user->save();
-        $restaurant = Restaurant::where('user_id', $user->id)->first();
-        $restaurant->name = $request->restaurant_name;
-        $restaurant->address = $request->address;
-        $restaurant->save();
-        return response(['success' => true, 'message' => 'User updated successfully']);
+
+        $user = User::find($request->user['id']);
+        
+            $user->name = $request->user['name'];
+            $user->email = $request->user['email'];
+            $user->phone = $request->user['phone'];
+            $user->company = $request->user['company'];
+            $user->street = $request->user['street'];
+            $user->city = $request->user['city'];
+            $user->zip_code = $request->user['zip_code'];
+
+            return $user->save();
+            
     }
+
     public function deleteUserById($request)
     {
         $user = User::find($request->id);
@@ -143,6 +185,11 @@ class AdminRepository implements AdminInterface
     public function viewOrderById($request)
     {
         return OrderItem::with('item')->where('order_id', $request->id)->get();
+    }
+    public function viewOrdersByRestaurantId($request)
+    {
+        return Order::with(['restaurant','user'])->where('restaurant_id',$request->restaurant_id)->get();
+        
     }
     public function deleteOrderById($request)
     {
@@ -157,5 +204,19 @@ class AdminRepository implements AdminInterface
     {
         $reservation = Reservation::find($request->id);
         return $reservation->delete();
+    }
+    public function approveClaimById($request)
+    {
+        $claim = Claim::find($request->id);
+        $claim->status = 1;
+        if ($claim->save()) {
+            $restaurant = Restaurant::find($claim->restaurant_id);
+            if ($restaurant) {
+                $restaurant->user_id = $claim->user_id;
+                $restaurant->status = 'Active';
+                return $restaurant->save();
+            } else {
+            }
+        }
     }
 }

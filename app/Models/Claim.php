@@ -9,9 +9,18 @@ class Claim extends Model
 {
     use HasFactory;
     protected $fillable = [
-        'file',
+        'ss4',
+        'food_license',
+        'address',
+        'city',
+        'zip_code',
+        'state',
+        'phone',
+        'email',
         'restaurant_id',
-        'user_id'
+        'user_id',
+        'name',
+        
     ];
     public function user(){
         return $this->belongsTo(User::class);
