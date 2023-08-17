@@ -27,7 +27,8 @@ class User extends Authenticatable
         'city',
         'zip_code',
         'password',
-        'status'
+        'status',
+        'user_type'
     ];
 
     /**
@@ -70,6 +71,10 @@ class User extends Authenticatable
     }
     public function messages(){
         return $this->hasMany(PrivateChat::class);
+    }
+    public function notifications()
+    {
+        return $this->hasMany(Notification::class);
     }
     
     

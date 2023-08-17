@@ -23,8 +23,13 @@ return new class extends Migration
             $table->string('state');
             $table->string('zip_code');
             $table->string('phone');
+            $table->string('sale_tax');
+            $table->string('meal_tax');
+            $table->string('business_property_return');
+            $table->string('bill_of_sale');
+            $table->string('s_corp');
+            $table->string('resale');
             $table->string('ss4');
-            $table->string('food_license');
             $table->string('status')->default('0');
             $table->unsignedBigInteger('user_id')->unsigned()->nullable();
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');

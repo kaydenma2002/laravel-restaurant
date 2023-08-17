@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 
 class Order extends Model
 {
@@ -22,7 +23,7 @@ class Order extends Model
         'user_id',
         'note'
     ];
-   
+    
     public function user()
     {
         return $this->belongsTo(User::class);
@@ -33,6 +34,10 @@ class Order extends Model
     }
     public function restaurant(){
         return $this->belongsTo(Restaurant::class,'restaurant_id');
+    }
+    public function orderItems()
+    {
+        return $this->hasMany(OrderItem::class);
     }
 
 }

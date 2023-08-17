@@ -1,0 +1,14 @@
+config:
+  target: 'http://localhost:3000'  # Your server URL
+
+scenarios:
+  - flow:
+      - post:
+          url: '/login'  # Login endpoint
+          json:
+            username: 'your_username'
+            password: 'your_password'
+        expect:
+          - statusCode: 200
+            json:
+              message: 'Login successful'

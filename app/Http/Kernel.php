@@ -44,8 +44,9 @@ class Kernel extends HttpKernel
         'api' => [
             EnsureFrontendRequestsAreStateful::class,
             \Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful::class,
-            'throttle:api',
+            'throttle:100000,1',
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
+            
         ],
     ];
 
@@ -60,6 +61,7 @@ class Kernel extends HttpKernel
         'auth' => \App\Http\Middleware\Authenticate::class,
         'auth.basic' => \Illuminate\Auth\Middleware\AuthenticateWithBasicAuth::class,
         'auth.session' => \Illuminate\Session\Middleware\AuthenticateSession::class,
+        'auth.nodejs' => \App\Http\Middleware\AuthenticateNodejs::class,
         'cache.headers' => \Illuminate\Http\Middleware\SetCacheHeaders::class,
         'can' => \Illuminate\Auth\Middleware\Authorize::class,
         'guest' => \App\Http\Middleware\RedirectIfAuthenticated::class,

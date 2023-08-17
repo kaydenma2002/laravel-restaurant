@@ -24,6 +24,18 @@ class AdminController extends Controller
     {
         return $this->adminInterface->users($request);
     }
+    public function chats_and_contacts(Request $request)
+    {
+        return $this->adminInterface->chats_and_contacts($request);
+    }
+    public function chats(Request $request)
+    {
+        return $this->adminInterface->chats($request);
+    }
+    public function createChats(Request $request)
+    {
+        return $this->adminInterface->createChats($request);
+    }
     public function restaurants(Request $request)
     {
         return $this->adminInterface->restaurants($request);
@@ -36,6 +48,25 @@ class AdminController extends Controller
     {
         return $this->adminInterface->orders($request);
     }
+    public function sales(Request $request)
+    {
+        return $this->adminInterface->sales($request);
+    }
+    public function notifications()
+    {
+        return $this->adminInterface->notifications();
+    }
+    public function updateIsReadByNotificationId(Request $request){
+        return $this->adminInterface->updateIsReadByNotificationId($request);
+    }
+    public function updateIsReadForAll(Request $request){
+        return $this->adminInterface->updateIsReadForAll($request);
+    }
+    public function deleteNotificationById(Request $request){
+        return $this->adminInterface->deleteNotificationById($request);
+    }
+    
+    
     public function viewUserById(Request $request){
         return $this->adminInterface->viewUserById($request);
     }
@@ -50,6 +81,9 @@ class AdminController extends Controller
     }
     public function viewRestaurantsByUserId(Request $request){
         return $this->adminInterface->viewRestaurantsByUserId($request);
+    }
+    public function viewItemsByOrderId(Request $request){
+        return $this->adminInterface->viewItemsByOrderId($request);
     }
     public function closeRestaurantById(Request $request){
         return $this->adminInterface->closeRestaurantById($request);

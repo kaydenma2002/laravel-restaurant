@@ -11,6 +11,7 @@ use App\Models\PasswordReset;
 use Illuminate\Support\Facades\Auth;
 use App\Events\UserCreated;
 use Illuminate\Console\Scheduling\Event;
+use Illuminate\Validation\ValidationException;
 
 class UserRepository implements UserInterface
 {
@@ -22,24 +23,12 @@ class UserRepository implements UserInterface
      */
     public function authenticateUser($request)
     {
+
         $user = User::where('email', $request->email)->first();
 
-        if (!$user || !Hash::check($request->password, $user->password)) {
-            return response([
-                'message' => ['These credentials do not match our records.']
-            ], 404);
-        } elseif ($user->status === '0') {
-            return response([
-                'message' => ['Please verify your email address to activate your account.']
-
-            ], 404);
-        } elseif ($user->status === '2') {
-            return response([
-                'message' => ['This account has been blocked. Please contact our support staff.']
-
-
-            ], 404);
-        }
+        if (!Auth::attempt($request->only('email', 'password'))) {
+            return $user;
+        } 
         $token = $user->createToken('my-app-token')->plainTextToken;
 
         $response = [
@@ -47,7 +36,7 @@ class UserRepository implements UserInterface
             'token' => $token
         ];
 
-        return response($response, 201);
+        return $response;
     }
     public function logout($request)
     {
@@ -58,7 +47,7 @@ class UserRepository implements UserInterface
     }
     public function getAllUsers()
     {
-        return User::with('restaurant')->where('id','!=',Auth::id())->get();
+        return User::with('restaurants')->where('id', '!=', Auth::id())->get();
     }
 
 
@@ -70,29 +59,18 @@ class UserRepository implements UserInterface
      */
     public function createUser($request)
     {
-        $data = PhoneVerification::Where('phone', $request->phone)->where('type','0')->orderBy('created_at', 'desc')->first();
-        
-            if (intval($data->verify_code) === intval($request->verify_code)) {
-                $user = User::create([
-                    'email' => $request->email,
-                    'password' => Hash::make($request->password),
-                    'name' => $request->name,
-                    'status' => $request->status,
-                    'phone' => $request->phone,
-                    'street' => $request->street,
-                    'city' => $request->city,
-                    'zip_code' => $request->zip_code,
-        
-                ]);
-                event(new UserCreated($user));
-                return $user;
-            } else {
-                return new JsonResponse([
-                    'success' => false,
-                    'message' => 'Invalid phone verification code'
-                ]);
-            }
-        
+        $user = User::create([
+            'email' => $request->email,
+            'password' => Hash::make($request->password),
+            'name' => $request->name,
+            'status' => $request->status,
+            'phone' => $request->phone,
+            'street' => $request->street,
+            'city' => $request->city,
+            'zip_code' => $request->zip_code,
+
+        ]);
+        return $user;
     }
     public function updateUser($request)
     {
@@ -122,7 +100,8 @@ class UserRepository implements UserInterface
     {
         return $request->user();
     }
-    public function getRecipient($request){
+    public function getRecipient($request)
+    {
         return User::find($request->id);
     }
 
@@ -184,10 +163,10 @@ class UserRepository implements UserInterface
             return response([
                 'message' => 'Your password has been reset',
 
-             ], 200);;
-        }else{
+            ], 200);;
+        } else {
             return response([
-               'message' => 'Invalid reset code'
+                'message' => 'Invalid reset code'
             ], 400);
         }
     }

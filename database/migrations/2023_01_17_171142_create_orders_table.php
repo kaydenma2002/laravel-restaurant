@@ -16,7 +16,7 @@ return new class extends Migration
         Schema::create('orders', function (Blueprint $table) {
             $table->id();
             
-            $table->string('total');
+            $table->float('total');
             $table->string('note')->nullable();
             $table->unsignedBigInteger('user_id');
             $table->unsignedBigInteger('restaurant_id');

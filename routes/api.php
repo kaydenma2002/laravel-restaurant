@@ -10,6 +10,7 @@ use App\Http\Controllers\StripePaymentController;
 use App\Http\Controllers\ClaimController;
 use App\Http\Controllers\RestaurantController;
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\OwnerController;
 use App\Http\Controllers\ChatController;
 use App\Http\Controllers\PrivateChatController;
 use App\Http\Controllers\PhoneVerificationController;
@@ -34,7 +35,8 @@ Route::post('submit-reservation', [ReservationController::class, 'index']);
 Route::get('submit-restaurant', [MenuController::class, 'getAllItemByRestaurant']);
 Route::post('create/cartBeforeLogin',[CartController::class, 'createCartBeforeLogin']);
 Route::get('getCartBeforeLogin',[CartController::class, 'getCartBeforeLogin']);
-Route::group(['middleware' => 'auth:sanctum'], function () {
+
+Route::group(['middleware' => 'auth.nodejs'], function () {
 
 
 
@@ -106,15 +108,24 @@ Route::group(['prefix' => 'admin'], function () {
     Route::group(['middleware' => 'auth:sanctum'], function () {
         Route::post('logout', [AdminController::class, 'logout']);
         Route::get('users', [AdminController::class, 'users']);
+        Route::get('chats_and_contacts', [AdminController::class, 'chats_and_contacts']);
+        Route::get('chats', [AdminController::class, 'chats']);
+        Route::post('create_chats',[AdminController::class,'createChats']);
         Route::get('restaurants', [AdminController::class, 'restaurants']);
         Route::get('claims',[AdminController::class,'claims']);
         Route::get('orders',[AdminController::class,'orders']);
+        Route::post('sales',[AdminController::class,'sales']);
+        Route::get('notifications',[AdminController::class,'notifications']);
+        Route::post('updateIsReadForAll',[AdminController::class,'updateIsReadForAll']);
+        Route::post('updateIsReadByNotificationId',[AdminController::class,'updateIsReadByNotificationId']);
+        Route::post('deleteNotificationById',[AdminController::class,'deleteNotificationById']);
         Route::post('approveClaimById',[AdminController::class,'approveClaimById']);
         Route::get('viewClaimById', [AdminController::class, 'viewClaimById']);
         Route::get('viewUserById', [AdminController::class, 'viewUserById']);
         Route::post('updateRestaurantById', [AdminController::class, 'updateRestaurantById']);
         Route::get('viewRestaurantById', [AdminController::class, 'viewRestaurantById']);
         Route::get('viewRestaurantsByUserId', [AdminController::class, 'viewRestaurantsByUserId']);
+        Route::get('viewItemsByOrderId', [AdminController::class, 'viewItemsByOrderId']);
         Route::post('closeRestaurantById', [AdminController::class, 'closeRestaurantById']);
         Route::post('updateUserById', [AdminController::class, 'updateUserById']);
         Route::post('deleteUserById', [AdminController::class, 'deleteUserById']);
@@ -127,3 +138,43 @@ Route::group(['prefix' => 'admin'], function () {
         Route::post('deleteReservationById', [AdminController::class, 'deleteReservationById']);
     });
 });
+Route::group(['prefix' => 'owner'], function () {
+    Route::post('login', [OwnerController::class, 'login']);
+    Route::group(['middleware' => 'auth:sanctum'], function () {
+    
+        Route::post('logout', [OwnerController::class, 'logout']);
+        Route::get('users', [OwnerController::class, 'users']);
+        Route::get('contacts', [OwnerController::class, 'contacts']);
+        Route::get('chats_and_contacts', [OwnerController::class, 'chats_and_contacts']);
+        Route::get('chats', [OwnerController::class, 'chats']);
+        Route::post('create_chats',[OwnerController::class,'createChats']);
+        Route::get('restaurants', [OwnerController::class, 'restaurants']);
+        Route::get('items',[OwnerController::class,'items']);
+        Route::get('orders',[OwnerController::class,'orders']);
+        Route::post('sales',[OwnerController::class,'sales']);
+        Route::get('notifications',[OwnerController::class,'notifications']);
+        Route::post('updateIsReadForAll',[OwnerController::class,'updateIsReadForAll']);
+        Route::post('updateIsReadByNotificationId',[OwnerController::class,'updateIsReadByNotificationId']);
+        Route::post('deleteNotificationById',[OwnerController::class,'deleteNotificationById']);
+        Route::post('approveClaimById',[OwnerController::class,'approveClaimById']);
+        Route::get('viewClaimById', [OwnerController::class, 'viewClaimById']);
+        Route::get('viewUserById', [OwnerController::class, 'viewUserById']);
+        Route::get('viewItemById', [OwnerController::class, 'viewItemById']);
+        Route::post('updateRestaurantById', [OwnerController::class, 'updateRestaurantById']);
+        Route::get('viewRestaurantById', [OwnerController::class, 'viewRestaurantById']);
+        Route::get('viewRestaurantsByUserId', [OwnerController::class, 'viewRestaurantsByUserId']);
+        Route::get('viewItemsByOrderId', [OwnerController::class, 'viewItemsByOrderId']);
+        Route::post('closeRestaurantById', [OwnerController::class, 'closeRestaurantById']);
+        Route::post('updateUserById', [OwnerController::class, 'updateUserById']);
+        Route::post('deleteUserById', [OwnerController::class, 'deleteUserById']);
+        Route::get('viewOrderById', [OwnerController::class, 'viewOrderById']);
+        Route::get('viewOrdersByRestaurantId', [OwnerController::class, 'viewOrdersByRestaurantId']);
+        Route::post('updateOrderById', [OwnerController::class, 'updateOrderById']);
+        Route::post('deleteOrderById', [OwnerController::class, 'deleteOrderById']);
+        Route::post('viewReservationById', [OwnerController::class, 'viewReservationById']);
+        Route::post('updateReservationById', [OwnerController::class, 'updateReservationById']);
+        Route::post('deleteReservationById', [OwnerController::class, 'deleteReservationById']);
+    });
+
+});
+

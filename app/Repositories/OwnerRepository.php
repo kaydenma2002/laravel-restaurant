@@ -6,11 +6,10 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-
-use App\Interfaces\AdminInterface;
+use App\Models\SuperAdminOwnerChat as SuperAdminOwnerChatModel;
+use App\Interfaces\OwnerInterface;
 use App\Models\Cart;
 use App\Models\Claim;
-use App\Events\SuperAdminOwnerChat;
 use App\Models\User;
 use App\Models\Restaurant;
 use App\Models\Order;
@@ -18,13 +17,12 @@ use App\Models\OrderItem;
 use App\Models\Item;
 use App\Models\Reservation;
 use App\Models\Notification;
-use App\Models\SuperAdminOwnerChat as SuperAdminOwnerChatModel;
-
-class AdminRepository implements AdminInterface
+use App\Events\SuperAdminOwnerChat;
+class OwnerRepository implements OwnerInterface
 {
     public function login($request)
     {
-        $user = User::Where('email', $request->email)->where('user_type', 0)->first();
+        $user = User::with('restaurants')->where('email', $request->email)->where('user_type', 1)->first();
 
         if (!$user || !Hash::check($request->password, $user->password)) {
             return response([
@@ -46,6 +44,7 @@ class AdminRepository implements AdminInterface
 
         $response = [
             'user' => $user,
+
             'token' => $token
         ];
 
@@ -74,64 +73,99 @@ class AdminRepository implements AdminInterface
             }
         }
     }
-    public function chats_and_contacts($request)
-    {
-        $contacts = User::where('user_type', 1)->where('name', 'LIKE', '%' . $request->search . '%')->get();
-        $user = Auth::user();
-        $chats = SuperAdminOwnerChatModel::with('superAdmin', 'owner')->where('super_admin_id', Auth::id())->get();
-        return ['user' => $user, 'contacts' => $contacts, 'chats' => $chats];
-    }
-    public function chats($request)
-    {
-        $chat = SuperAdminOwnerChatModel::with(['superAdmin', 'owner'])->where('super_admin_id', Auth::id())->where('owner_id', $request->owner_id)->get();
-        $owner = User::where('id', $request->owner_id)->first();
-        return ['owner' => $owner, 'chat' => $chat];
-    }
-    public function createChats($request)
-    {
-        $new_chat = SuperAdminOwnerChatModel::create([
-            'super_admin_id' => Auth::id(),
-            'owner_id' => $request->owner_id,
-            'message' => $request->message,
-            'type' => 0
-        ]);
-        $chats = SuperAdminOwnerChatModel::with('superAdmin', 'owner')->where('super_admin_id', Auth::id())->where('id',$new_chat->id)->first();
-        broadcast(new SuperAdminOwnerChat($request->message,Auth::id(),$request->owner_id,1))->toOthers();
-        return ['chats' => $chats];
-    }
     public function restaurants($request)
     {
         if ($request->status != 'null') {
             if ($request->key !== 'null' && $request->order !== 'null') {
-                return Restaurant::with('user')->where('name', 'LIKE', '%' . $request->search . '%')->where('status', $request->status)->orderBy($request->key, $request->order)->paginate($request->paginate ?? 10);
+                return Restaurant::with('user')
+                    ->where('user_id', Auth::id()) // Filter by the authenticated user's ID
+                    ->where('name', 'LIKE', '%' . $request->search . '%')
+                    ->where('status', $request->status)
+                    ->orderBy($request->key, $request->order)
+                    ->paginate($request->paginate ?? 10);
             } else {
-                return Restaurant::with('user')->where('name', 'LIKE', '%' . $request->search . '%')->where('status', $request->status)->paginate($request->paginate ?? 10);
+                return Restaurant::with('user')
+                    ->where('user_id', Auth::id()) // Filter by the authenticated user's ID
+                    ->where('name', 'LIKE', '%' . $request->search . '%')
+                    ->where('status', $request->status)
+                    ->paginate($request->paginate ?? 10);
             }
         } else {
             if ($request->key !== 'null' && $request->order !== 'null') {
-                return Restaurant::with('user')->where('name', 'LIKE', '%' . $request->search . '%')->orderBy($request->key, $request->order)->paginate($request->paginate ?? 10);
+                return Restaurant::with('user')
+                    ->where('user_id', Auth::id()) // Filter by the authenticated user's ID
+                    ->where('name', 'LIKE', '%' . $request->search . '%')
+                    ->orderBy($request->key, $request->order)
+                    ->paginate($request->paginate ?? 10);
             } else {
-                return Restaurant::with('user')->where('name', 'LIKE', '%' . $request->search . '%')->paginate($request->paginate ?? 10);
+                return Restaurant::with('user')
+                    ->where('user_id', Auth::id()) // Filter by the authenticated user's ID
+                    ->where('name', 'LIKE', '%' . $request->search . '%')
+                    ->paginate($request->paginate ?? 10);
             }
         }
     }
-    public function claims($request)
+    public function chats_and_contacts($request)
+    {
+        $contacts = User::where('user_type', 0)->where('name', 'LIKE', '%' . $request->search . '%')->get();
+        $user = Auth::user();
+        $chats = SuperAdminOwnerChatModel::with('superAdmin', 'owner')->where('owner_id', Auth::id())->get();
+        return ['user' => $user, 'contacts' => $contacts, 'chats' => $chats];
+    }
+    public function chats($request)
+    {
+        $chat = SuperAdminOwnerChatModel::with(['superAdmin', 'owner'])->where('owner_id', Auth::id())->where('super_admin_id', $request->super_admin_id)->get();
+        $super_admin = User::where('id', $request->super_admin_id)->first();
+        return ['super_admin' => $super_admin, 'chat' => $chat];
+    }
+    public function createChats($request)
+    {
+        $new_chat = SuperAdminOwnerChatModel::create([
+            'owner_id' => Auth::id(),
+            'super_admin_id' => $request->super_admin_id,
+            'message' => $request->message,
+            'type' => 1
+        ]);
+        $chats = SuperAdminOwnerChatModel::with('superAdmin', 'owner')->where('owner_id', Auth::id())->where('id',$new_chat->id)->first();
+        broadcast(new SuperAdminOwnerChat($request->message,$request->super_admin_id,Auth::id(),0))->toOthers();
+        return ['chats' => $chats,'user' => Auth::id()];
+    }
+    public function items($request)
     {
         if ($request->status != 'null') {
             if ($request->key !== 'null' && $request->order !== 'null') {
-                return Claim::with(['restaurant', 'user'])->where('name', 'LIKE', '%' . $request->search . '%')->where('status', $request->status)->orderBy($request->key, $request->order)->paginate($request->paginate ?? 10);
+                return Item::with(['restaurant'])
+                    ->where('name', 'LIKE', '%' . $request->search . '%')
+                    ->where('status', $request->status)
+                    ->orderBy($request->key, $request->order)
+                    ->whereHas('restaurant', function ($query) {
+                        $query->where('user_id', Auth::id());
+                    })
+                    ->paginate($request->paginate ?? 10);
             } else {
-                return Claim::with(['restaurant', 'user'])->where('name', 'LIKE', '%' . $request->search . '%')->where('status', $request->status)->paginate($request->paginate ?? 10);
+                return Item::with(['restaurant'])
+                    ->where('name', 'LIKE', '%' . $request->search . '%')
+                    ->where('status', $request->status)
+                    ->whereHas('restaurant', function ($query) {
+                        $query->where('user_id', Auth::id());
+                    })
+                    ->paginate($request->paginate ?? 10);
             }
         } else {
             if ($request->key !== 'null' && $request->order !== 'null') {
-                return Claim::with(['restaurant', 'user'])->whereHas('user', function ($query) use ($request) {
-                    $query->where('name', 'LIKE', '%' . $request->search . '%');
-                })->paginate($request->paginate ?? 10);
+                return Item::with(['restaurant'])
+                    ->whereHas('restaurant', function ($query) use ($request) {
+                        $query->where('user_id', Auth::id())
+                            ->where('name', 'LIKE', '%' . $request->search . '%');
+                    })
+                    ->paginate($request->paginate ?? 10);
             } else {
-                return Claim::with(['restaurant', 'user'])->whereHas('user', function ($query) use ($request) {
-                    $query->where('name', 'LIKE', '%' . $request->search . '%');
-                })->paginate($request->paginate ?? 10);
+                return Item::with(['restaurant'])
+                    ->whereHas('restaurant', function ($query) use ($request) {
+                        $query->where('user_id', Auth::id())
+                            ->where('name', 'LIKE', '%' . $request->search . '%');
+                    })
+                    ->paginate($request->paginate ?? 10);
             }
         }
     }
@@ -139,43 +173,74 @@ class AdminRepository implements AdminInterface
     {
         if ($request->status != 'null') {
             if ($request->key !== 'null' && $request->order !== 'null') {
-                return Order::with(['user', 'restaurant'])->where('status', $request->status)->orderBy($request->key, $request->order)->paginate($request->paginate ?? 10);
+                return Order::with(['user', 'restaurant'])
+                    ->where('status', $request->status)
+                    ->whereHas('restaurant', function ($query) {
+                        $query->where('user_id', Auth::id());
+                    })
+                    ->orderBy($request->key, $request->order)
+                    ->paginate($request->paginate ?? 10);
             } else {
-                return Order::with(['user', 'restaurant'])->where('status', $request->status)->paginate($request->paginate ?? 10);
+                return Order::with(['user', 'restaurant'])
+                    ->where('status', $request->status)
+                    ->whereHas('restaurant', function ($query) {
+                        $query->where('user_id', Auth::id());
+                    })
+                    ->paginate($request->paginate ?? 10);
             }
         } else {
             if ($request->key !== 'null' && $request->order !== 'null') {
-                return Order::with(['user', 'restaurant'])->orderBy($request->key, $request->order)->paginate($request->paginate ?? 10);
+                return Order::with(['user', 'restaurant'])
+                    ->whereHas('restaurant', function ($query) {
+                        $query->where('user_id', Auth::id());
+                    })
+                    ->orderBy($request->key, $request->order)
+                    ->paginate($request->paginate ?? 10);
             } else {
-                return Order::with(['user', 'restaurant'])->paginate($request->paginate ?? 10);
+                return Order::with(['user', 'restaurant'])
+                    ->whereHas('restaurant', function ($query) {
+                        $query->where('user_id', Auth::id());
+                    })
+                    ->paginate($request->paginate ?? 10);
             }
         }
     }
     public function sales($request)
     {
 
-        $owners = User::where('user_type', 1)->count();
-        $items = Item::count();
 
+
+        $authUserId = Auth::id();
+        $items = Item::whereHas('restaurant', function ($query) use ($authUserId) {
+            $query->where('user_id', $authUserId);
+        })->count();
         $startDate = null;
         $endDate = null;
         if ($request->time_range === null) {
             $startDate = Carbon::now()->startOfDay();
             $endDate = Carbon::now()->endOfDay();
-            $sales = Order::whereDate('created_at', Carbon::today())->sum('total');
+            $sales = Order::whereDate('created_at', Carbon::today())->whereHas('restaurant', function ($query) use ($authUserId) {
+                $query->where('user_id', $authUserId);
+            })->sum('total');
         } else {
             if ($request->time_range === 'Today') {
                 $startDate = Carbon::now()->startOfDay();
                 $endDate = Carbon::now()->endOfDay();
-                $sales = Order::whereDate('created_at', Carbon::today())->sum('total');
+                $sales = Order::whereDate('created_at', Carbon::today())->whereHas('restaurant', function ($query) use ($authUserId) {
+                    $query->where('user_id', $authUserId);
+                })->sum('total');
             } elseif ($request->time_range === 'This Week') {
                 $startDate = Carbon::now()->startOfWeek();
                 $endDate = Carbon::now()->endOfWeek();
-                $sales = Order::whereBetween('created_at', [Carbon::now()->startOfWeek(), Carbon::now()->endOfWeek()])->sum('total');
+                $sales = Order::whereBetween('created_at', [Carbon::now()->startOfWeek(), Carbon::now()->endOfWeek()])->whereHas('restaurant', function ($query) use ($authUserId) {
+                    $query->where('user_id', $authUserId);
+                })->sum('total');
             } elseif ($request->time_range === 'This Month') {
                 $startDate = Carbon::now()->startOfMonth();
                 $endDate = Carbon::now()->endOfMonth();
-                $sales = Order::whereBetween('created_at', [Carbon::now()->startOfMonth(), Carbon::now()->endOfMonth()])->sum('total');
+                $sales = Order::whereBetween('created_at', [Carbon::now()->startOfMonth(), Carbon::now()->endOfMonth()])->whereHas('restaurant', function ($query) use ($authUserId) {
+                    $query->where('user_id', $authUserId);
+                })->sum('total');
             }
         }
 
@@ -183,6 +248,7 @@ class AdminRepository implements AdminInterface
         $topRestaurants = Restaurant::select('restaurants.*', DB::raw('SUM(orders.total) as total_sales'))
             ->join('orders', 'orders.restaurant_id', '=', 'restaurants.restaurant_id')
             ->whereBetween('orders.created_at', [$startDate, $endDate])
+            ->where('restaurants.user_id', $authUserId) // Filter restaurants by the authenticated user's ID
             ->groupBy('restaurants.restaurant_id')
             ->orderByDesc('total_sales')
             ->limit(4)
@@ -192,7 +258,8 @@ class AdminRepository implements AdminInterface
         // Get the sum of total sales for the rest of the restaurants (excluding the top 4)
         $restOfRestaurantsTotalSales = Restaurant::join('orders', 'orders.restaurant_id', '=', 'restaurants.restaurant_id')
             ->whereBetween('orders.created_at', [$startDate, $endDate])
-            ->whereNotIn('restaurants.restaurant_id', $topRestaurantIds) // Exclude top 4 restaurants
+            ->where('restaurants.user_id', $authUserId) // Filter restaurants by the authenticated user's ID
+            ->whereNotIn('restaurants.restaurant_id', $topRestaurantIds)
             ->sum('orders.total');
 
         // Create an object representing the "restaurant" with the total sales of the rest
@@ -206,6 +273,9 @@ class AdminRepository implements AdminInterface
         $currentYear = Carbon::now()->year;
         $monthlySales = Order::selectRaw('MONTH(created_at) as month, SUM(total) as total_sales')
             ->whereYear('created_at', $currentYear)
+            ->whereHas('restaurant', function ($query) use ($authUserId) {
+                $query->where('user_id', $authUserId);
+            })
             ->groupBy('month')
             ->orderBy('month')
             ->get();
@@ -227,7 +297,7 @@ class AdminRepository implements AdminInterface
 
             'monthlySales' => $monthlySalesResult,
             'sales' => $sales,
-            'owners' => $owners,
+
             'items' => $items,
             'topRestaurants' => $topRestaurants,
             'startDate' => $startDate,
@@ -236,40 +306,7 @@ class AdminRepository implements AdminInterface
 
         return $result;
     }
-    public function notifications()
-    {
-        return Notification::all();
-    }
-    public function updateIsReadForAll($request)
-    {
-        $notifications = Notification::all();
-        if ($request->admin_read_at === true) {
-            foreach ($notifications as $notification) {
-                $notification->admin_read_at = Carbon::now();
-                $notification->save();
-            }
-            return response()->json(['read']);
-        } else if ($request->admin_read_at === false) {
-            foreach ($notifications as $notification) {
-                $notification->admin_read_at = null;
-                $notification->save();
-            }
-            return response()->json(['un_read']);
-        }
-    }
-    public function updateIsReadByNotificationId($request)
-    {
-        $notification = Notification::find($request->notification_id);
-        if ($notification->admin_read_at === null) {
-            $notification->admin_read_at = Carbon::now();
-            $notification->save();
-        }
-    }
-    public function deleteNotificationById($request)
-    {
-        $notification = Notification::find($request->id);
-        return $notification->delete();
-    }
+
     public function viewUserById($request)
     {
         $user = User::with('restaurants')->find($request->id); // Assuming there is a User model
@@ -297,7 +334,9 @@ class AdminRepository implements AdminInterface
                 ->get();
 
             $totalOrders = $orders->count();
-            $totalSales = $orders->sum('total');
+            $totalSales = $orders->whereHas('restaurant', function ($query) use ($authUserId) {
+                $query->where('user_id', Auth::id());
+            })->sum('total');
 
             $totalOrdersAndSalesPerDay[$currentDate->toDateString()] = [
                 'totalOrders' => $totalOrders,
@@ -340,11 +379,11 @@ class AdminRepository implements AdminInterface
     }
     public function viewItemsByOrderId($request)
     {
-        return Order::with('user', 'restaurant', 'orderItems.item')->find($request->order_id);
+        return Order::with('user','restaurant', 'orderItems.item')->find($request->order_id);
     }
-    public function viewClaimById($request)
+    public function viewItemById($request)
     {
-        return Claim::with(['user', 'restaurant'])->find($request->id);
+        return Item::with('restaurant')->find($request->id);
     }
     public function updateUserById($request)
     {
@@ -403,5 +442,47 @@ class AdminRepository implements AdminInterface
             } else {
             }
         }
+    }
+    public function notifications(){
+        $restaurants = Restaurant::where('user_id', Auth::id())->get();
+
+// Initialize an array to store the notifications
+$notifications = [];
+
+foreach ($restaurants as $restaurant) {
+    $notificationsForRestaurant = Notification::where('add_data', $restaurant->restaurant_id)->where('type', 0)->get();
+
+    $notifications = array_merge($notifications, $notificationsForRestaurant->toArray());
+}
+
+return $notifications;
+    }
+    public function updateIsReadForAll($request){
+        $notifications = Notification::all();
+        if($request->read_at === true){
+            foreach($notifications as $notification){
+                $notification->owner_read_at = Carbon::now();
+                $notification->save();
+            }
+            return response()->json(['read']);
+        }else if($request->read_at === false){
+            foreach($notifications as $notification){
+                $notification->owner_read_at = null;
+                $notification->save();
+            }
+            return response()->json(['un_read']);
+        }
+        
+    }
+    public function updateIsReadByNotificationId($request){
+        $notification = Notification::find($request->notification_id);
+        if($notification->owner_read_at === null){
+            $notification->owner_read_at = Carbon::now();
+            $notification->save();
+        }
+    }
+    public function deleteNotificationById($request){
+        $notification = Notification::find($request->id);
+        return $notification->delete();
     }
 }

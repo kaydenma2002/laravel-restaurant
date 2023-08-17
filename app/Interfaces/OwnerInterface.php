@@ -2,7 +2,7 @@
 
 namespace App\Interfaces;
 
-interface AdminInterface
+interface OwnerInterface
 {
     public function login($request);
     public function logout($request);
@@ -11,18 +11,19 @@ interface AdminInterface
     public function chats($request);
     public function createChats($request);
     public function restaurants($request);
-    public function claims($request);
+    
+    public function items($request);
     public function orders($request);
     public function sales($request);
+    
+    public function viewUserById($request);
+    public function viewItemById($request);
+    public function viewRestaurantById($request);
+    public function updateRestaurantById($request);
     public function notifications();
     public function updateIsReadByNotificationId($request);
     public function updateIsReadForAll($request);
     public function deleteNotificationById($request);
-    public function viewUserById($request);
-    public function viewClaimById($request);
-    public function viewRestaurantById($request);
-    public function updateRestaurantById($request);
-
     public function viewRestaurantsByUserId($request);
     public function viewItemsByOrderId($request);
     public function closeRestaurantById($request);
