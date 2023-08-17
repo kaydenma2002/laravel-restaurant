@@ -36,7 +36,7 @@ Route::get('submit-restaurant', [MenuController::class, 'getAllItemByRestaurant'
 Route::post('create/cartBeforeLogin',[CartController::class, 'createCartBeforeLogin']);
 Route::get('getCartBeforeLogin',[CartController::class, 'getCartBeforeLogin']);
 
-Route::group(['middleware' => 'auth.nodejs'], function () {
+Route::group(['middleware' => 'auth.owner_nodejs'], function () {
 
 
 
@@ -105,7 +105,7 @@ Route::post('restaurant/find', [RestaurantController::class, 'getRestaurantByWeb
 // admin
 Route::group(['prefix' => 'admin'], function () {
     Route::post('login', [AdminController::class, 'login']);
-    Route::group(['middleware' => 'auth:sanctum'], function () {
+    Route::group(['middleware' => 'auth.admin_nodejs'], function () {
         Route::post('logout', [AdminController::class, 'logout']);
         Route::get('users', [AdminController::class, 'users']);
         Route::get('chats_and_contacts', [AdminController::class, 'chats_and_contacts']);
@@ -140,7 +140,7 @@ Route::group(['prefix' => 'admin'], function () {
 });
 Route::group(['prefix' => 'owner'], function () {
     Route::post('login', [OwnerController::class, 'login']);
-    Route::group(['middleware' => 'auth:sanctum'], function () {
+    Route::group(['middleware' => 'auth.owner_nodejs'], function () {
     
         Route::post('logout', [OwnerController::class, 'logout']);
         Route::get('users', [OwnerController::class, 'users']);

@@ -132,42 +132,7 @@ class OwnerRepository implements OwnerInterface
     }
     public function items($request)
     {
-        if ($request->status != 'null') {
-            if ($request->key !== 'null' && $request->order !== 'null') {
-                return Item::with(['restaurant'])
-                    ->where('name', 'LIKE', '%' . $request->search . '%')
-                    ->where('status', $request->status)
-                    ->orderBy($request->key, $request->order)
-                    ->whereHas('restaurant', function ($query) {
-                        $query->where('user_id', Auth::id());
-                    })
-                    ->paginate($request->paginate ?? 10);
-            } else {
-                return Item::with(['restaurant'])
-                    ->where('name', 'LIKE', '%' . $request->search . '%')
-                    ->where('status', $request->status)
-                    ->whereHas('restaurant', function ($query) {
-                        $query->where('user_id', Auth::id());
-                    })
-                    ->paginate($request->paginate ?? 10);
-            }
-        } else {
-            if ($request->key !== 'null' && $request->order !== 'null') {
-                return Item::with(['restaurant'])
-                    ->whereHas('restaurant', function ($query) use ($request) {
-                        $query->where('user_id', Auth::id())
-                            ->where('name', 'LIKE', '%' . $request->search . '%');
-                    })
-                    ->paginate($request->paginate ?? 10);
-            } else {
-                return Item::with(['restaurant'])
-                    ->whereHas('restaurant', function ($query) use ($request) {
-                        $query->where('user_id', Auth::id())
-                            ->where('name', 'LIKE', '%' . $request->search . '%');
-                    })
-                    ->paginate($request->paginate ?? 10);
-            }
-        }
+        return Item::find(1);
     }
     public function orders($request)
     {
