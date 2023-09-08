@@ -20,10 +20,10 @@ class SuperAdminOwnerChat implements ShouldBroadCast
      * @return void
      */
     
-    private $message;
-    private $super_admin_id;
-    private $owner_id;
-    private $type;
+    public $message;
+    public $super_admin_id;
+    public $owner_id;
+    public $type;
     public function __construct($message, $super_admin_id, $owner_id, $type)
     {
         
@@ -40,7 +40,7 @@ class SuperAdminOwnerChat implements ShouldBroadCast
      */
     public function broadcastOn()
     {
-        return new PrivateChannel('private-super-admin-owner-chat.'. $this->super_admin_id . '.' . $this->owner_id);
+        return new PrivateChannel('super-admin-owner-chat.'. $this->super_admin_id . '.' . $this->owner_id);
     }
     
 

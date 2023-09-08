@@ -18,16 +18,17 @@ class AuthenticateAdminNodejs
     public function handle(Request $request, Closure $next)
     {
         $token = $request->bearerToken();
+        
         $currentEnvironment = App::environment();
         
         if ($currentEnvironment === 'local') {
             // Code to run in local environment
-            $response = Http::get('http://127.0.0.1:3001/api/validate-token', [
+            $response = Http::post('https://127.0.0.1/api/validate-token', [
                 'token' => $token,
             ]);
         } elseif ($currentEnvironment === 'production') {
             // Code to run in production environment
-            $response = Http::get('https://142.11.205.17:8000/api/validate-token', [
+            $response = Http::post('https://142.11.205.17/api/validate-token', [
                 'token' => $token,
             ]);
         }
@@ -39,6 +40,11 @@ class AuthenticateAdminNodejs
         }
 
         if ($responseArray['userType'] === '0') {
+            $user = (object) $responseArray['user'];
+            $request->merge(['authenticatedUser' => $responseArray['user']]);
+            $request->setUserResolver(function () use ($user) {
+                return $user;
+            });
             return $next($request);
         }
 

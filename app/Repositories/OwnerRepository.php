@@ -6,6 +6,7 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Http;
 use App\Models\SuperAdminOwnerChat as SuperAdminOwnerChatModel;
 use App\Interfaces\OwnerInterface;
 use App\Models\Cart;
@@ -78,14 +79,14 @@ class OwnerRepository implements OwnerInterface
         if ($request->status != 'null') {
             if ($request->key !== 'null' && $request->order !== 'null') {
                 return Restaurant::with('user')
-                    ->where('user_id', Auth::id()) // Filter by the authenticated user's ID
+                    ->where('user_id', authUser()->id) // Filter by the authenticated user's ID
                     ->where('name', 'LIKE', '%' . $request->search . '%')
                     ->where('status', $request->status)
                     ->orderBy($request->key, $request->order)
                     ->paginate($request->paginate ?? 10);
             } else {
                 return Restaurant::with('user')
-                    ->where('user_id', Auth::id()) // Filter by the authenticated user's ID
+                    ->where('user_id', authUser()->id) // Filter by the authenticated user's ID
                     ->where('name', 'LIKE', '%' . $request->search . '%')
                     ->where('status', $request->status)
                     ->paginate($request->paginate ?? 10);
@@ -93,13 +94,13 @@ class OwnerRepository implements OwnerInterface
         } else {
             if ($request->key !== 'null' && $request->order !== 'null') {
                 return Restaurant::with('user')
-                    ->where('user_id', Auth::id()) // Filter by the authenticated user's ID
+                    ->where('user_id', authUser()->id) // Filter by the authenticated user's ID
                     ->where('name', 'LIKE', '%' . $request->search . '%')
                     ->orderBy($request->key, $request->order)
                     ->paginate($request->paginate ?? 10);
             } else {
                 return Restaurant::with('user')
-                    ->where('user_id', Auth::id()) // Filter by the authenticated user's ID
+                    ->where('user_id', authUser()->id) // Filter by the authenticated user's ID
                     ->where('name', 'LIKE', '%' . $request->search . '%')
                     ->paginate($request->paginate ?? 10);
             }
@@ -108,27 +109,32 @@ class OwnerRepository implements OwnerInterface
     public function chats_and_contacts($request)
     {
         $contacts = User::where('user_type', 0)->where('name', 'LIKE', '%' . $request->search . '%')->get();
-        $user = Auth::user();
-        $chats = SuperAdminOwnerChatModel::with('superAdmin', 'owner')->where('owner_id', Auth::id())->get();
+        $user = authUser();
+        $chats = SuperAdminOwnerChatModel::with('superAdmin', 'owner')->where('owner_id', authUser()->id)->get();
         return ['user' => $user, 'contacts' => $contacts, 'chats' => $chats];
     }
     public function chats($request)
     {
-        $chat = SuperAdminOwnerChatModel::with(['superAdmin', 'owner'])->where('owner_id', Auth::id())->where('super_admin_id', $request->super_admin_id)->get();
+        $chat = SuperAdminOwnerChatModel::with(['superAdmin', 'owner'])->where('owner_id', authUser()->id)->where('super_admin_id', $request->super_admin_id)->get();
         $super_admin = User::where('id', $request->super_admin_id)->first();
         return ['super_admin' => $super_admin, 'chat' => $chat];
     }
     public function createChats($request)
     {
         $new_chat = SuperAdminOwnerChatModel::create([
-            'owner_id' => Auth::id(),
+            'owner_id' => authUser()->id,
             'super_admin_id' => $request->super_admin_id,
             'message' => $request->message,
-            'type' => 1
+        'type' => 1
         ]);
-        $chats = SuperAdminOwnerChatModel::with('superAdmin', 'owner')->where('owner_id', Auth::id())->where('id',$new_chat->id)->first();
-        broadcast(new SuperAdminOwnerChat($request->message,$request->super_admin_id,Auth::id(),0))->toOthers();
-        return ['chats' => $chats,'user' => Auth::id()];
+        $chats = SuperAdminOwnerChatModel::with('superAdmin', 'owner')->where('owner_id', authUser()->id)->where('id',$new_chat->id)->first();
+        Http::post('https://127.0.0.1/send-message', [
+            'super_admin_id' => $request->super_admin_id,
+            'owner_id' => authUser()->id,
+            'message' => $request->message,
+            'type' => 0
+        ]);
+        return ['chats' => $chats,'user' => authUser()->id];
     }
     public function items($request)
     {
@@ -141,7 +147,7 @@ class OwnerRepository implements OwnerInterface
                 return Order::with(['user', 'restaurant'])
                     ->where('status', $request->status)
                     ->whereHas('restaurant', function ($query) {
-                        $query->where('user_id', Auth::id());
+                        $query->where('user_id', authUser()->id);
                     })
                     ->orderBy($request->key, $request->order)
                     ->paginate($request->paginate ?? 10);
@@ -149,7 +155,7 @@ class OwnerRepository implements OwnerInterface
                 return Order::with(['user', 'restaurant'])
                     ->where('status', $request->status)
                     ->whereHas('restaurant', function ($query) {
-                        $query->where('user_id', Auth::id());
+                        $query->where('user_id', authUser()->id);
                     })
                     ->paginate($request->paginate ?? 10);
             }
@@ -157,14 +163,14 @@ class OwnerRepository implements OwnerInterface
             if ($request->key !== 'null' && $request->order !== 'null') {
                 return Order::with(['user', 'restaurant'])
                     ->whereHas('restaurant', function ($query) {
-                        $query->where('user_id', Auth::id());
+                        $query->where('user_id', authUser()->id);
                     })
                     ->orderBy($request->key, $request->order)
                     ->paginate($request->paginate ?? 10);
             } else {
                 return Order::with(['user', 'restaurant'])
                     ->whereHas('restaurant', function ($query) {
-                        $query->where('user_id', Auth::id());
+                        $query->where('user_id', authUser()->id);
                     })
                     ->paginate($request->paginate ?? 10);
             }
@@ -175,7 +181,7 @@ class OwnerRepository implements OwnerInterface
 
 
 
-        $authUserId = Auth::id();
+        $authUserId = authUser()->id;
         $items = Item::whereHas('restaurant', function ($query) use ($authUserId) {
             $query->where('user_id', $authUserId);
         })->count();
@@ -300,7 +306,7 @@ class OwnerRepository implements OwnerInterface
 
             $totalOrders = $orders->count();
             $totalSales = $orders->whereHas('restaurant', function ($query) use ($authUserId) {
-                $query->where('user_id', Auth::id());
+                $query->where('user_id', authUser()->id);
             })->sum('total');
 
             $totalOrdersAndSalesPerDay[$currentDate->toDateString()] = [
@@ -409,7 +415,7 @@ class OwnerRepository implements OwnerInterface
         }
     }
     public function notifications(){
-        $restaurants = Restaurant::where('user_id', Auth::id())->get();
+        $restaurants = Restaurant::where('user_id', authUser()->id)->get();
 
 // Initialize an array to store the notifications
 $notifications = [];

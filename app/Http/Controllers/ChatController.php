@@ -32,16 +32,16 @@ class ChatController extends Controller
         $chat = new Chat([
             'message' => $message,
             'reply' => $reply,
-            'user_id' => Auth::user()->id
+            'user_id' => authUser()->id
         ]);
         $chat->save();
-        event(new Message(Auth::user()->id, $chat));
+        event(new Message(authUser()->id, $chat));
 
         // Return the AI response to the client
         return response()->json($chat);
     }
     public function getAllChat()
     {
-        return Chat::with('user')->where('user_id', Auth::user()->id)->get();
+        return Chat::with('user')->where('user_id', authUser()->id)->get();
     }
 }

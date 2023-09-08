@@ -16,13 +16,13 @@ class CartRepository implements CartInterface
 {
     public function create($request)
     {
-        $cart = Cart::where('user_id', Auth::id())
+        $cart = Cart::where('user_id', authUser()->id)
             ->where('item_id', $request->item_id)
             ->first();
 
         if (!$cart) {
             return Cart::create([
-                'user_id' => Auth::id(),
+                'user_id' => authUser()->id,
                 'item_id' => $request->item_id,
                 'restaurant_id' => $request->restaurant_id,
                 'quantity' => $request->quantity
@@ -80,7 +80,7 @@ class CartRepository implements CartInterface
         } else {
             // Create a new item in Cart
             Cart::create([
-                'user_id' => Auth::id(),
+                'user_id' => authUser()->id,
                 'restaurant_id' => $cartBeforeLoginItem->restaurant_id,
                 'item_id' => $cartBeforeLoginItem->item_id,
                 'quantity' => $cartBeforeLoginItem->quantity
@@ -96,7 +96,7 @@ class CartRepository implements CartInterface
     }
     public function remove()
     {
-        return Cart::where('user_id', Auth::id())->delete();
+        return Cart::where('user_id', authUser()->id)->delete();
     }
     public function removebyId($request)
     {
@@ -108,7 +108,7 @@ class CartRepository implements CartInterface
         if($request->type){
             
             if($request->type === 'increase'){
-                $cart = Cart::Where('id',$request->id)->where('user_id',Auth::id())->first();
+                $cart = Cart::Where('id',$request->id)->where('user_id',authUser()->id)->first();
                 if($cart){
                     $cart->quantity = $request->quantity;
                     $cart->save(); 
@@ -116,7 +116,7 @@ class CartRepository implements CartInterface
                 }
                 
             }elseif($request->type === 'decrease'){
-                $cart = Cart::Where('id',$request->id)->where('user_id',Auth::id())->first();
+                $cart = Cart::Where('id',$request->id)->where('user_id',authUser()->id)->first();
                 if($cart){
                     $cart->quantity = $request->quantity;
                     return $cart->save(); 
@@ -128,7 +128,7 @@ class CartRepository implements CartInterface
     {   
         $restaurant = Restaurant::where('web_id',$request->web_id)->first();
         if($restaurant !=null){
-            $cart = Cart::with('user', 'item')->where('user_id', Auth::id())->where('restaurant_id',$restaurant->restaurant_id)->get();
+            $cart = Cart::with('user', 'item')->where('user_id', authUser()->id)->where('restaurant_id',$restaurant->restaurant_id)->get();
             if($cart->sum('quantity') > 0){
                 return $cart;
             }else{

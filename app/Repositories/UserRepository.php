@@ -47,7 +47,7 @@ class UserRepository implements UserInterface
     }
     public function getAllUsers()
     {
-        return User::with('restaurants')->where('id', '!=', Auth::id())->get();
+        return User::with('restaurants')->where('id', '!=', authUser()->id)->get();
     }
 
 
@@ -74,7 +74,7 @@ class UserRepository implements UserInterface
     }
     public function updateUser($request)
     {
-        $user = Auth::user();
+        $user = authUser();
         if (Hash::check($request->old_password, $user->password)) {
             if ($request->new_password != $request->confirm_password) {
                 return response([
@@ -98,7 +98,7 @@ class UserRepository implements UserInterface
      */
     public function getProfile($request)
     {
-        return $request->user();
+        return authUser();
     }
     public function getRecipient($request)
     {

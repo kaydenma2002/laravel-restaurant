@@ -23,13 +23,13 @@ class OrderRepository implements OrderInterface
             'total' => $request->total / 100,
             'note' => $request->note,
             'restaurant_id' => $restaurant->restaurant_id,
-            'user_id' => Auth::id()
+            'user_id' => authUser()->id
         ]);
         $notification = Notification::create([
-            'user_id' => Auth::id(),
+            'user_id' => authUser()->id,
             'type' => 0,
             'title' =>'Order',
-            'body' => 'Order created at' . ''. $restaurant->name . ' by ' . Auth::user()->name,
+            'body' => 'Order created at' . ''. $restaurant->name . ' by ' . authUser()->name,
             'data' => $order->id,
             'add_data' => $restaurant->restaurant_id
         ]);
@@ -49,7 +49,7 @@ class OrderRepository implements OrderInterface
     public function getOrder($request)
     {
         if($request->web_id == null){
-            return Order::with('user','restaurant')->where('user_id',Auth::id())->get();
+            return Order::with('user','restaurant')->where('user_id',authUser()->id)->get();
         }else{
             $restaurant = Restaurant::where('web_id',$request->web_id)->first();
             return Order::with('user','restaurant')->where('restaurant_id',$restaurant->restaurant_id)->get();

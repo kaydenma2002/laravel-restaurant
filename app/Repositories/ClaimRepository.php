@@ -34,13 +34,13 @@ class ClaimRepository implements ClaimInterface
                     'business_license' => $request->business_license,
                     'ss4' => $request->ss4,
                     'restaurant_id' => $restaurant->restaurant_id,
-                    'user_id' => Auth::id()
+                    'user_id' => authUser()->id
                 ]);
                 $notification = Notification::create([
-                    'user_id' => Auth::id(),
+                    'user_id' => authUser()->id,
                     'type' => 0,
                     'title' =>'Claim',
-                    'body' => 'Claim received for' . $restaurant->name . 'by' . Auth::user()->name,
+                    'body' => 'Claim received for' . $restaurant->name . 'by' . authUser()->name,
                     'data' => $claim->id,
                     'add_data' => $restaurant->restaurant_id
                 ]);

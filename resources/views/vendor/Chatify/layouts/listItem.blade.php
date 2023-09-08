@@ -1,6 +1,6 @@
 {{-- -------------------- Saved Messages -------------------- --}}
 @if($get == 'saved')
-    <table class="messenger-list-item m-li-divider" data-contact="{{ Auth::user()->id }}">
+    <table class="messenger-list-item m-li-divider" data-contact="{{ authUser()->id }}">
         <tr data-action="0">
             {{-- Avatar side --}}
             <td>
@@ -10,7 +10,7 @@
             </td>
             {{-- center side --}}
             <td>
-                <p data-id="{{ Auth::user()->id }}" data-type="user">Saved Messages <span>You</span></p>
+                <p data-id="{{ authUser()->id }}" data-type="user">Saved Messages <span>You</span></p>
                 <span>Save messages secretly</span>
             </td>
         </tr>
@@ -38,7 +38,7 @@
         <span>
             {{-- Last Message user indicator --}}
             {!!
-                $lastMessage->from_id == Auth::user()->id
+                $lastMessage->from_id == authUser()->id
                 ? '<span class="lastMessageIndicator">You :</span>'
                 : ''
             !!}

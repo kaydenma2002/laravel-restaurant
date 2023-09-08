@@ -23,12 +23,12 @@ class AuthenticateOwnerNodejs
         
         if ($currentEnvironment === 'local') {
             // Code to run in local environment
-            $response = Http::get('http://127.0.0.1:3001/api/validate-token', [
+            $response = Http::post('https://127.0.0.1/api/validate-token', [
                 'token' => $token,
             ]);
         } elseif ($currentEnvironment === 'production') {
             // Code to run in production environment
-            $response = Http::get('https://142.11.205.17:8000/api/validate-token', [
+            $response = Http::post('https://142.11.205.17/api/validate-token', [
                 'token' => $token,
             ]);
         }
@@ -36,12 +36,17 @@ class AuthenticateOwnerNodejs
 
         
         if ($response->status() !== 200 || $responseArray['valid'] !== true) {
-            return response()->json(['error' => 'Unauthorized'], 401);
+            return response()->json(['error' => $token], 401);
         }
 
         
 
         if ($responseArray['userType'] === '1') {
+            $user = (object) $responseArray['user'];
+            $request->merge(['authenticatedUser' => $responseArray['user']]);
+            $request->setUserResolver(function () use ($user) {
+                return $user;
+            });
             return $next($request);
         }
 

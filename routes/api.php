@@ -16,6 +16,7 @@ use App\Http\Controllers\PrivateChatController;
 use App\Http\Controllers\PhoneVerificationController;
 use App\Http\Controllers\ReservationController;
 use App\Http\Controllers\ItemController;
+use App\Http\Controllers\CustomBroadcastAuthController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -26,7 +27,6 @@ use App\Http\Controllers\ItemController;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
-
 Route::post('login', [UserController::class, 'login']);
 Route::post('register', [UserController::class, 'register']);
 Route::post('verify-mobile-register', [PhoneVerificationController::class, 'register']);
@@ -35,8 +35,11 @@ Route::post('submit-reservation', [ReservationController::class, 'index']);
 Route::get('submit-restaurant', [MenuController::class, 'getAllItemByRestaurant']);
 Route::post('create/cartBeforeLogin',[CartController::class, 'createCartBeforeLogin']);
 Route::get('getCartBeforeLogin',[CartController::class, 'getCartBeforeLogin']);
-
+Route::group(['middleware' => 'auth.nodejs'],function (){
+    Route::post('custom-broadcasting/auth', [CustomBroadcastAuthController::class,'authenticate']);
+});
 Route::group(['middleware' => 'auth.owner_nodejs'], function () {
+   
 
 
 

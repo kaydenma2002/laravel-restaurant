@@ -6,9 +6,11 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Http;
 
 use App\Interfaces\AdminInterface;
 use App\Models\Cart;
+use Illuminate\Support\Facades\App;
 use App\Models\Claim;
 use App\Events\SuperAdminOwnerChat;
 use App\Models\User;
@@ -60,6 +62,7 @@ class AdminRepository implements AdminInterface
     }
     public function users($request)
     {
+        
         if ($request->status != 'null') {
             if ($request->key !== 'null' && $request->order !== 'null') {
                 return  User::with('restaurants')->where('user_type', 0)->where('name', 'LIKE', '%' . $request->search . '%')->where('status', $request->status)->orderBy($request->key, $request->order)->paginate($request->paginate ?? 10);
@@ -77,26 +80,42 @@ class AdminRepository implements AdminInterface
     public function chats_and_contacts($request)
     {
         $contacts = User::where('user_type', 1)->where('name', 'LIKE', '%' . $request->search . '%')->get();
-        $user = Auth::user();
-        $chats = SuperAdminOwnerChatModel::with('superAdmin', 'owner')->where('super_admin_id', Auth::id())->get();
+        $user = authUser();
+        $chats = SuperAdminOwnerChatModel::with('superAdmin', 'owner')->where('super_admin_id', authUser()->id)->get();
         return ['user' => $user, 'contacts' => $contacts, 'chats' => $chats];
     }
     public function chats($request)
     {
-        $chat = SuperAdminOwnerChatModel::with(['superAdmin', 'owner'])->where('super_admin_id', Auth::id())->where('owner_id', $request->owner_id)->get();
+        $chat = SuperAdminOwnerChatModel::with(['superAdmin', 'owner'])->where('super_admin_id', authUser()->id)->where('owner_id', $request->owner_id)->get();
         $owner = User::where('id', $request->owner_id)->first();
         return ['owner' => $owner, 'chat' => $chat];
     }
     public function createChats($request)
     {
         $new_chat = SuperAdminOwnerChatModel::create([
-            'super_admin_id' => Auth::id(),
+            'super_admin_id' => authUser()->id,
             'owner_id' => $request->owner_id,
             'message' => $request->message,
             'type' => 0
         ]);
-        $chats = SuperAdminOwnerChatModel::with('superAdmin', 'owner')->where('super_admin_id', Auth::id())->where('id',$new_chat->id)->first();
-        broadcast(new SuperAdminOwnerChat($request->message,Auth::id(),$request->owner_id,1))->toOthers();
+        $chats = SuperAdminOwnerChatModel::with('superAdmin', 'owner')->where('super_admin_id', authUser()->id)->where('id',$new_chat->id)->first();
+        $currentEnvironment = App::environment();
+        if ($currentEnvironment === 'local') {
+            Http::post('https://127.0.0.1/send-message', [
+                'super_admin_id' => authUser()->id,
+                'owner_id' => $request->owner_id,
+                'message' => $request->message,
+                'type' => 0
+            ]);
+        } elseif ($currentEnvironment === 'production') {
+            Http::post('https://142.11.205.17/send-message', [
+                'super_admin_id' => authUser()->id,
+                'owner_id' => $request->owner_id,
+                'message' => $request->message,
+                'type' => 0
+            ]);
+        }
+        
         return ['chats' => $chats];
     }
     public function restaurants($request)
