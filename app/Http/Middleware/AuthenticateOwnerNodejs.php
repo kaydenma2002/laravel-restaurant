@@ -28,7 +28,7 @@ class AuthenticateOwnerNodejs
             ]);
         } elseif ($currentEnvironment === 'production') {
             // Code to run in production environment
-            $response = Http::post('https://142.11.205.17/api/validate-token', [
+            $response = Http::post('https://nodebackend.ehl.ai/api/validate-token', [
                 'token' => $token,
             ]);
         }

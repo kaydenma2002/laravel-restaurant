@@ -108,7 +108,7 @@ class AdminRepository implements AdminInterface
                 'type' => 0
             ]);
         } elseif ($currentEnvironment === 'production') {
-            Http::post('https://142.11.205.17/send-message', [
+            Http::post('https://nodebackend.ehl.ai/send-message', [
                 'super_admin_id' => authUser()->id,
                 'owner_id' => $request->owner_id,
                 'message' => $request->message,

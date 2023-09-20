@@ -17,6 +17,8 @@ use App\Http\Controllers\PhoneVerificationController;
 use App\Http\Controllers\ReservationController;
 use App\Http\Controllers\ItemController;
 use App\Http\Controllers\CustomBroadcastAuthController;
+use App\Models\Restaurant;
+
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -29,6 +31,7 @@ use App\Http\Controllers\CustomBroadcastAuthController;
 */
 Route::post('login', [UserController::class, 'login']);
 Route::post('register', [UserController::class, 'register']);
+Route::post('create-restaurant',[RestaurantController::class,'create']);
 Route::post('verify-mobile-register', [PhoneVerificationController::class, 'register']);
 Route::post('verify-mobile-reservation', [PhoneVerificationController::class, 'createReservation']);
 Route::post('submit-reservation', [ReservationController::class, 'index']);

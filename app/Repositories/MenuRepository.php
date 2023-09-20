@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Interfaces\MenuInterface;
 
 use App\Models\Restaurant;
+
 use App\Models\Item;
 use Illuminate\Http\JsonResponse;
 use Exception;
@@ -35,10 +36,9 @@ class MenuRepository implements MenuInterface
     {
         $restaurant = Restaurant::with('user')->where('name', 'LIKE', '%' . strtolower($request->restaurant) . '%')->first();
         if ($restaurant) {
-            $menu = Menu::with('restaurant')->where('restaurant_id', $restaurant->id)->first();
 
             try {
-                $item = Item::with('menu')->where('menu_id', $menu->id)->get();
+                $item = Item::where('restaurant_id', $restaurant->restaurant_id)->get();
                 return ['item' => $item];
             } catch (Exception $e) {
                 return new JsonResponse(['message' => $e->getMessage()]);

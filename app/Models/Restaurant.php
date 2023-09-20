@@ -21,7 +21,9 @@ class Restaurant extends Model
         'city',
         'zip_code',
         'password',
-        'status'
+        'status',
+        'web_id',
+        'restaurant_id'
     ];
     protected $primaryKey = 'restaurant_id';
     use HasFactory;

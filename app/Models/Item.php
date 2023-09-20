@@ -8,13 +8,25 @@ use Illuminate\Database\Eloquent\Model;
 class Item extends Model
 {
     use HasFactory;
-    public function menu(){
+    protected $fillable = [
+        'title',
+        'price',
+        'description',
+        'note',
+        'category',
+        'restaurant_id'
+    ];
+
+    public function menu()
+    {
         return $this->belongsTo(Menu::class);
     }
-    public function orders(){
+    public function orders()
+    {
         return $this->belongsToMany(Order::class);
     }
-    public function category(){
+    public function category()
+    {
         return $this->belongsTo(Category::class);
     }
     public function cart()
@@ -25,9 +37,8 @@ class Item extends Model
     {
         return $this->belongsTo(CartBeforeLogin::class);
     }
-    public function restaurant(){
-        return $this->belongsTo(Restaurant::class,'restaurant_id');
+    public function restaurant()
+    {
+        return $this->belongsTo(Restaurant::class, 'restaurant_id');
     }
-    
-    
 }
