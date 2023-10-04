@@ -22,7 +22,7 @@ return new class extends Migration
             $table->unsignedBigInteger('restaurant_id');
             $table->foreign('user_id')->references('id')->on('users');
             $table->foreign('restaurant_id')->references('restaurant_id')->on('restaurants');
-
+            $table->integer('status')->default(0);
             
             $table->timestamps();
         });

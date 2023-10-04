@@ -28,7 +28,7 @@ class AuthenticateAdminNodejs
             ]);
         } elseif ($currentEnvironment === 'production') {
             // Code to run in production environment
-            $response = Http::post('https://nodebackend.ehl.ai/api/validate-token', [
+            $response = Http::withOptions(['debug' => true,'verify' => false])->post('https://nodebackend.ehl.ai/api/validate-token', [
                 'token' => $token,
             ]);
         }

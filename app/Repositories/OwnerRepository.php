@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Repositories;
+use Illuminate\Support\Facades\App;
 
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Hash;
@@ -128,12 +129,25 @@ class OwnerRepository implements OwnerInterface
         'type' => 1
         ]);
         $chats = SuperAdminOwnerChatModel::with('superAdmin', 'owner')->where('owner_id', authUser()->id)->where('id',$new_chat->id)->first();
-        Http::post('https://127.0.0.1/send-message', [
-            'super_admin_id' => $request->super_admin_id,
-            'owner_id' => authUser()->id,
-            'message' => $request->message,
-            'type' => 0
-        ]);
+        $currentEnvironment = App::environment();
+
+        if ($currentEnvironment === 'local') {
+            Http::post('https://127.0.0.1/send-message', [
+             'super_admin_id' => $request->super_admin_id,
+             'owner_id' => authUser()->id,
+             'message' => $request->message,
+             'type' => 0
+         ]);
+         }elseif($currentEnvironment === 'production') {
+             Http::withOptions(['debug' => true, 'verify' => false])->post('https://nodebackend.ehl.ai/send-message', [
+             'super_admin_id' => $request->super_admin_id,
+             'owner_id' => authUser()->id,
+             'message' => $request->message,
+             'type' => 0
+         ]);
+         }
+ 
+
         return ['chats' => $chats,'user' => authUser()->id];
     }
     public function items($request)

@@ -10,7 +10,6 @@ use Illuminate\Support\Str;
 
 class Restaurant extends Model
 {
-    protected $guarded = ['id'];
     protected $fillable = [
         'id',
         'name',

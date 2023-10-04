@@ -68,6 +68,6 @@ class RestaurantRepository implements RestaurantInterface
         return Restaurant::where('restaurant_id',$request->restaurant_id)->first();
     }
     public function getRestaurantByWebId($request){
-        return Restaurant::where('web_id',$request->web_id)->first();
+        return Restaurant::where('web_id',$request->web_id)->latest('created_at')->first();
     }
 }
