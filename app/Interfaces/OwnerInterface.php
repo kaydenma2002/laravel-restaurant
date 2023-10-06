@@ -18,6 +18,7 @@ interface OwnerInterface
     
     public function viewUserById($request);
     public function viewItemById($request);
+    public function viewItemsByRestaurantId($request);
     public function viewRestaurantById($request);
     public function updateRestaurantById($request);
     public function notifications();

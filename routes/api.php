@@ -166,6 +166,7 @@ Route::group(['prefix' => 'owner'], function () {
         Route::get('viewClaimById', [OwnerController::class, 'viewClaimById']);
         Route::get('viewUserById', [OwnerController::class, 'viewUserById']);
         Route::get('viewItemById', [OwnerController::class, 'viewItemById']);
+        Route::get('viewItemsByRestaurantId',[OwnerController::class,'viewItemsByRestaurantId']);
         Route::post('updateRestaurantById', [OwnerController::class, 'updateRestaurantById']);
         Route::get('viewRestaurantById', [OwnerController::class, 'viewRestaurantById']);
         Route::get('viewRestaurantsByUserId', [OwnerController::class, 'viewRestaurantsByUserId']);

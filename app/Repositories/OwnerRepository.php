@@ -20,6 +20,8 @@ use App\Models\Item;
 use App\Models\Reservation;
 use App\Models\Notification;
 use App\Events\SuperAdminOwnerChat;
+use Exception;
+
 class OwnerRepository implements OwnerInterface
 {
     public function login($request)
@@ -319,9 +321,7 @@ class OwnerRepository implements OwnerInterface
                 ->get();
 
             $totalOrders = $orders->count();
-            $totalSales = $orders->whereHas('restaurant', function ($query) use ($authUserId) {
-                $query->where('user_id', authUser()->id);
-            })->sum('total');
+            $totalSales = $orders->sum('total');
 
             $totalOrdersAndSalesPerDay[$currentDate->toDateString()] = [
                 'totalOrders' => $totalOrders,
@@ -337,6 +337,8 @@ class OwnerRepository implements OwnerInterface
         $restaurant->totalWeekSales = $totalWeekSales;
 
         return $restaurant;
+
+        
     }
     public function updateRestaurantById($request)
     {
@@ -366,10 +368,15 @@ class OwnerRepository implements OwnerInterface
     {
         return Order::with('user','restaurant', 'orderItems.item')->find($request->order_id);
     }
+    public function viewItemsByRestaurantId($request)
+    {
+        return Item::with('restaurant')->where('restaurant_id',$request->restaurant_id)->paginate($request->paginate ?? 10);
+    }
     public function viewItemById($request)
     {
         return Item::with('restaurant')->find($request->id);
     }
+
     public function updateUserById($request)
     {
 

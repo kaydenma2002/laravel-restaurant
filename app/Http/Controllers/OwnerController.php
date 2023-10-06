@@ -73,6 +73,9 @@ class OwnerController extends Controller
     public function viewItemById(Request $request){
         return $this->ownerInterface->viewItemById($request);
     }
+    public function viewItemsByRestaurantId(Request $request){
+        return $this->ownerInterface->viewItemsByRestaurantId($request);
+    }
     
     public function updateRestaurantById(Request $request){
         return $this->ownerInterface->updateRestaurantById($request);
